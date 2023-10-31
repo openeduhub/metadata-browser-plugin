@@ -98,7 +98,6 @@ function myFunction() {
         return response.json()
     }).then((res) => {        
         let ojson = res;
-
         document.getElementById("title_id").value = ojson.title;
         document.getElementById("description_id").value = ojson.description;
         document.getElementById("discipline_id").value = ojson.disciplines;
@@ -107,8 +106,12 @@ function myFunction() {
         document.getElementById("license_id").value = ojson.license;
         document.getElementById("license_author_id").value = ojson.license_author;
         document.getElementById("lrt_id").value = ojson.new_lrt;
+        document.getElementById("capture_state_success").style.display = "block";
+        document.getElementById("capture_state_fail").style.display = "none";
     }).catch((error) => {
         console.log(error)
+        document.getElementById("capture_state_success").style.display = "none";
+        document.getElementById("capture_state_fail").style.display = "block";
     });
 }
 

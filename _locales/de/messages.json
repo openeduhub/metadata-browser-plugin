@@ -25,5 +25,11 @@
     },
     "capture_form_label_button": {
         "message": "Metadaten erfassen"
+    },
+    "capture_form_state_success": {
+        "message": "Metadaten-Erfassung erfolgreich!"
+    },
+    "capture_form_state_fail": {
+        "message": "Metadaten-Erfassung fehlgeschlagen :("
     }
 }

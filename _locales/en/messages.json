@@ -25,5 +25,11 @@
     },
     "capture_form_label_button": {
         "message": "capture metadata"
+    },
+    "capture_form_state_success": {
+        "message": "capturing of metadata successful!"
+    },
+    "capture_form_state_fail": {
+        "message": "capturing of metadata failed :("
     }
 }

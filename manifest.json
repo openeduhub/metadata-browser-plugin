@@ -7,7 +7,7 @@
   "options_page": "options.html",
   "action":{
     "default_popup": "metadata_form.html",
-    "default_title": "Options test"
+    "default_title": "Metadaten erfassen"
   },
   "icons": {
     "16": "edu16.png",
