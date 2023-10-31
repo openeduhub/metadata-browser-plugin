@@ -1,0 +1,29 @@
+{
+    "capture_form_headline": {
+        "message": "Metadaten erfassen"
+    },
+    "capture_form_label_url": {
+        "message": "Adresse"
+    },
+    "capture_form_label_title": {
+        "message": "Titel"
+    },
+    "capture_form_label_disciplines": {
+        "message": "Fächer"
+    },
+    "capture_form_label_description": {
+        "message": "Beschreibung"
+    },
+    "capture_form_label_keywords": {
+        "message": "Schlüsselwörter"
+    },
+    "capture_form_label_license": {
+        "message": "Lizenz"
+    },
+    "capture_form_label_educational_context": {
+        "message": "Bildungsstufe"
+    },
+    "capture_form_label_button": {
+        "message": "Metadaten erfassen"
+    }
+}

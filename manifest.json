@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-
   "name": "edu-sharing",
   "description": "",
   "version": "1.0",
+  "default_locale": "de",
   "options_page": "options.html",
   "action":{
     "default_popup": "metadata_form.html",
@@ -12,10 +12,7 @@
   "icons": {
     "16": "edu16.png",
     "48": "edu48.png",
-    "128": "edu128.png" },
-  "browser_action": {
-    "default_icon": "edu48.png",
-    "default_popup": "popup.html"
+    "128": "edu128.png" 
   },
   "host_permissions": [
     "http://*/*",
@@ -24,10 +21,9 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "https://ajax.googleapis.com/",
+    "webRequest",
     "contextMenus",
     "notifications",
-    "storage",
-    "*://*/*"
+    "storage"
   ]
 }

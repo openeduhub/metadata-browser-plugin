@@ -1,0 +1,29 @@
+{
+    "capture_form_headline": {
+        "message": "capture metadata"
+    },
+    "capture_form_label_url": {
+        "message": "url"
+    },
+    "capture_form_label_title": {
+        "message": "title"
+    },
+    "capture_form_label_disciplines": {
+        "message": "disciplines"
+    },
+    "capture_form_label_description": {
+        "message": "description"
+    },
+    "capture_form_label_keywords": {
+        "message": "keywords"
+    },
+    "capture_form_label_license": {
+        "message": "license"
+    },
+    "capture_form_label_educational_context": {
+        "message": "educational context"
+    },
+    "capture_form_label_button": {
+        "message": "capture metadata"
+    }
+}

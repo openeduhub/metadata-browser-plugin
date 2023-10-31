@@ -15,8 +15,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     let maxTags = 10,
     tags = ["test_tag1", "test_tag2"];
-    countTags();
-    createTag();
+    //countTags();
+    //createTag();
     function countTags(){
         input.focus();
         tagNumb.innerText = maxTags - tags.length;
@@ -51,11 +51,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
     input.addEventListener("keyup", addTag);
     const removeBtn = document.querySelector(".details button");
-    removeBtn.addEventListener("click", () =>{
-        tags.length = 0;
-        ul.querySelectorAll("li").forEach(li => li.remove());
-        countTags();
-    });
+    //removeBtn.addEventListener("click", () =>{
+    //    tags.length = 0;
+    //    ul.querySelectorAll("li").forEach(li => li.remove());
+    //    //countTags();
+    //});
 
 });
 
