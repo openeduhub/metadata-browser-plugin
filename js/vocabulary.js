@@ -1,6 +1,6 @@
-function load_vocabs() {
+function load_vocabs(name, selector) {
     console.log("Load vocabs");
-    fetch("https://vocabs.openeduhub.de/w3id.org/openeduhub/vocabs/educationalContext/index.json", {
+    fetch("https://w3id.org/openeduhub/vocabs/" + name + "/index.json", {
         method: 'get',
         headers: {
             'accept': 'application/json',
@@ -10,7 +10,7 @@ function load_vocabs() {
         return response.json()
     }).then((res) => {        
         concepts = res.hasTopConcept
-        select = document.getElementById("educontext_id")
+        select = document.getElementById(selector)
         concepts.map(concept => {
             console.log(concept.prefLabel.de)
             var option = document.createElement('option')
@@ -23,4 +23,9 @@ function load_vocabs() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', load_vocabs);
+function load_and_set() {
+    load_vocabs("educationalContext", "educontext_id");
+    load_vocabs("discipline", "discipline_id");
+}
+
+document.addEventListener('DOMContentLoaded', load_and_set);
