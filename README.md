@@ -20,7 +20,14 @@ Then to debug the extension, click on the details button of the extension and se
 
 
 ## How to load and debug the web extension in Firefox
-First type to "about:debugger" in a firefox url field, then click on This Firefox and Load extension:
-![Load extension - Chrome](https://github.com/openeduhub/metadata-browser-plugin/blob/add_metadata_form/docs/Fig6.png)
+First type `about:debugging#/setup` into the firefox url field as shown in the following image:
+![Debug extension - Firefox](https://github.com/openeduhub/metadata-browser-plugin/blob/add_metadata_form/docs/Fig7.png)
 
-init
+Then click on `This Firefox` button and then click on `Load temporary add-on` button:
+![Load extension - Firefox](https://github.com/openeduhub/metadata-browser-plugin/blob/add_metadata_form/docs/Fig8.png)
+
+And select any file of this folder when you extracted into your machine. Then it should appear something like this:
+
+![Load extension - Firefox](https://github.com/openeduhub/metadata-browser-plugin/blob/add_metadata_form/docs/Fig6.png)
+
+Now you can use the extension and its recommended to pin the extension into the Toolbar with the option `Pin to toolbar` option of the menu of extension in Firefox.
