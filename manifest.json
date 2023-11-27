@@ -1,5 +1,6 @@
 {
   "manifest_version": 3,
+
   "name": "edu-sharing",
   "description": "",
   "version": "1.0",
@@ -7,12 +8,12 @@
   "options_page": "options.html",
   "action":{
     "default_popup": "metadata_form.html",
-    "default_title": "Metadaten erfassen"
+    "default_title": "Options test"
   },
   "icons": {
     "16": "edu16.png",
     "48": "edu48.png",
-    "128": "edu128.png" 
+    "128": "edu128.png"
   },
   "host_permissions": [
     "http://*/*",
