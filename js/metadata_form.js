@@ -60,6 +60,35 @@ window.addEventListener("DOMContentLoaded", (event) => {
         // document.getElementById('content').style.display = 'none';
         // document.getElementById('content_options').style.display = 'block';
     });
+
+    function set_status(status, message) {
+        document.getElementById('status').innerHTML = message;
+    }
+
+    document.getElementById("form_options").addEventListener("submit", function(event){
+    event.preventDefault();
+        login();
+    });
+
+    function set_options() {
+
+        var institutions = get_institutions();
+        var selectInstitution = document.getElementById('institution');
+        for(var i=0;i<institutions.length;i++) {
+            var opt = document.createElement('option');
+            opt.value = institutions[i].url;
+            opt.innerHTML = institutions[i].name;
+            selectInstitution.appendChild(opt);
+        }
+
+        chrome.storage.sync.get({
+            edu_institution: '',
+            edu_user: ''
+        }, function(items) {
+            document.getElementById('institution').value = items.edu_institution;
+            document.getElementById('user').value = items.edu_user;
+        });
+    }
 });
 
 
@@ -132,8 +161,8 @@ function fetchMetadata() {
 
         let maxTags = 10,
         tags = ojson.disciplines;
-        countTags();
-        createTag();
+        //countTags();
+        //createTag();
         function countTags(){
             input.focus();
             // tagNumb.innerText = maxTags - tags.length;
@@ -168,11 +197,11 @@ function fetchMetadata() {
         }
         input.addEventListener("keyup", addTag);
         const removeBtn = document.querySelector(".details button");
-        removeBtn.addEventListener("click", () =>{
+        /*removeBtn.addEventListener("click", () =>{
             tags.length = 0;
             ul.querySelectorAll("li").forEach(li => li.remove());
             countTags();
-        });
+        });*/
 
 
 
@@ -214,10 +243,6 @@ function persist_metadata(result_json) {
 // options.js
 
 
-
-function set_status(status, message) {
-    document.getElementById('status').innerHTML = message;
-}
 
 function login() {
 
@@ -405,9 +430,6 @@ function receiveMessage(event){
 set_status('', 'Nicht angemeldet');
 document.addEventListener('DOMContentLoaded', set_options);
 // implement document.addEventListener('DOMContentLoaded', get_status);
-document.getElementById("form_options").addEventListener("submit", function(event){
-    event.preventDefault();
-    login();
-});
+
 
 document.getElementById("logout").addEventListener("click", logout);
