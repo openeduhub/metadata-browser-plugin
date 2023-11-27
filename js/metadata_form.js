@@ -126,7 +126,7 @@ function getCurrentURL(tab){
 
 function fetchMetadata() {
     local_url = document.getElementById("url_id").value;
-    fetch("http://127.0.0.1:5500/metadata", {
+    fetch("http://0.0.0.0:80/metadata", {
         method: 'post',
         body: JSON.stringify({ 
                 url: local_url
@@ -212,7 +212,7 @@ function fetchMetadata() {
 }
 
 function persist_metadata(result_json) {
-    fetch("http://127.0.0.1:5500/set_metadata", {
+    fetch("http://0.0.0.0:80/set_metadata", {
         method: 'post',
         body: result_json,
         headers: {
