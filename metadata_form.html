@@ -3,59 +3,17 @@
 <head>
     <title>Metadata form</title>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/thinline.css">
-    <script src="js/metadata_form.js"></script>
+    
 </head>
 <link rel="stylesheet" href="css/options.css">
 <body>
 <h1 data-locale="capture_form_headline"></h1>
 <div id="content">
-    <div id="status"></div>
     
-    <form id="options" style="display: inline">
-        <label data-locale="capture_form_label_url"></label>
-        <input id="url_id"/>
-        <label data-locale="capture_form_label_title"></label>
-        <input id="title_id"/>
-        <label data-locale="capture_form_label_description"></label>
-        <textarea id="description_id" cols="40", rows="5"></textarea>
-        <label data-locale="capture_form_label_disciplines"></label>
-        <select id="discipline_id" name="discipline" multiple="multiple"></select>
-        <label data-locale="capture_form_label_keywords"></label>
-        <input id="keywords_id"/>
-        <label data-locale="capture_form_label_license"></label>
-        <input id="license_id"/>
-        <!--  <label>LICENSE AUTHOR</label>  -->
-        <!--  <input id="license_author_id"/>  -->
-        <label data-locale="capture_form_label_educational_context"></label>
-        <!--  <input id="educontext_id"/>  -->
-        <select id="educontext_id" name="educational context" multiple="multiple"></select>
-        <label>LEARNING RESOURCE TYPE</label>
-        <input id="lrt_id"/>
-        
-    </form>
 
-
-    <button id="testbutton" data-locale="capture_form_label_button"></button>
-
-    <!--  <div class="details">  -->
-    <!--  <button>Remove All</button>  -->
-    <!--  </div>  -->
-
-    <div class="details">
-    <button id="select_repository_id">Select repository</button>
-    </div>
-
-    <button id="weiter_id">Weiter</button>
-    <p id="persist_metadata_id">Metadata not saved</p>
-    <script src="js/metadata_form.js"></script>
-    
-</div>
-
-
-<div id="content_options">
     <div id="status"></div>
     <button id="logout" style="display: none">Abmelden</button>
-    <iframe id="institution-frame" src="http://app-registry.edu-sharing.com/ng/?reset=true&version=all" frameborder="0"></iframe>
+    <iframe id="institution-frame" src="https://redaktion.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content" frameborder="0"></iframe>
     <form id="form_options" style="display: none">
         <label for="user">Nutzername</label>
         <input id="user"/>
@@ -63,9 +21,9 @@
         <input type="password" id="password"/>
         <button type="submit" id="save">Anmelden</button>
     </form>
+
 </div>
 
-<script src="js/vocabulary.js"></script>
-<script src="js/i18n.js"></script>
+
 </body>
 </html>
