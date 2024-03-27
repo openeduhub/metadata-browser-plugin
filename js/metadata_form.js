@@ -2,15 +2,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
     document.getElementById("testbutton").addEventListener("click", function() {
         
         var active_url = getCurrentTab();
-        
         active_url.then(function(result) {
             document.getElementById("url_id").value = result;
             fetchMetadata();
         });
         
-
-        
-        //fetchMetadata();
+        // set_WLO_form();
         
     });
 
@@ -123,10 +120,60 @@ function getCurrentURL(tab){
     currentURL = tab;
 }
 
+function set_WLO_form(ojson){
+    const title = ojson.title;
+
+    const description = ojson.description;
+
+    var disciplines = ojson.disciplines;
+    disciplines = disciplines.split(', ')
+
+    var educontext = ojson.educational_context;
+    educontext = educontext.split(', ')
+
+    var keywords = ojson.keywords;
+    keywords = keywords.split(', ')
+
+    var lrt = ojson.new_lrt;
+    lrt = lrt.split(', ')
+
+    var dict = {"cclom:title":[title], "cclom:general_description":[description], "ccm:taxonid":disciplines, "ccm:educationalcontext":educontext, "cclom:general_keyword":keywords, "ccm:oeh_lrt":lrt };
+
+    const decoded_url = JSON.stringify(dict);
+    const encoded_url = encodeURIComponent(decoded_url);
+
+    var base_WLO_url = "https://redaktion.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content&data=";
+    var complete_WLO_url = base_WLO_url+encoded_url;
+    load_WLO_url(complete_WLO_url);
+}
+
+function set_metadata_form(ojson){
+    document.getElementById("title_id").value = ojson.title;
+    document.getElementById("description_id").value = ojson.description;
+
+    document.getElementById("kidra_disciplines_id").value = ojson.kidra_disciplines;
+    document.getElementById("text_difficulty_id").value = ojson.text_difficulty;
+    document.getElementById("reading_time_id").value = ojson.text_reading_time;
+    document.getElementById("curriculum_id").value = ojson.curriculum;
+
+    document.getElementById("discipline_id").value = ojson.disciplines;
+    document.getElementById("educontext_id").value = ojson.educational_context;
+    document.getElementById("keywords_id").value = ojson.keywords;
+    let license = JSON.stringify(ojson.license)
+    document.getElementById("license_id").value = license;
+    document.getElementById("lrt_id").value = ojson.new_lrt;
+
+}
+
+function load_WLO_url(composed_url) {
+    var myIframe = document.getElementById('wlo_iframe');
+    myIframe.setAttribute("src", composed_url);
+}
 
 function fetchMetadata() {
     local_url = document.getElementById("url_id").value;
-    fetch("http://0.0.0.0:80/metadata", {
+    fetch("http://127.0.0.1:5500/metadata", {
+    // fetch("https://generic-crawler.staging.openeduhub.net/metadata", {
         method: 'post',
         body: JSON.stringify({ 
                 url: local_url
@@ -142,18 +189,9 @@ function fetchMetadata() {
 
         sessionStorage.setItem("result_json", ojson);
 
-        // CLEAN THE LISTS TO MAKE THEM AN ARRAY WITHOUT QUOTES ""
-
-        document.getElementById("title_id").value = ojson.title;
-        document.getElementById("description_id").value = ojson.description;
-        document.getElementById("discipline_id").value = ojson.disciplines;
-        document.getElementById("educontext_id").value = ojson.educational_context;
-        document.getElementById("keywords_id").value = ojson.keywords;
-        let license = JSON.stringify(ojson.license)
-        document.getElementById("license_id").value = license;
-        // document.getElementById("license_author_id").value = ojson.license_author;
-        document.getElementById("lrt_id").value = ojson.new_lrt;
-
+        set_WLO_form(ojson);
+        // set_metadata_form(ojson);
+        
 
         const ul = document.querySelector("ul"),
         input = document.querySelector("input");
@@ -212,7 +250,8 @@ function fetchMetadata() {
 }
 
 function persist_metadata(result_json) {
-    fetch("http://0.0.0.0:80/set_metadata", {
+    fetch("http://127.0.0.1:5500/set_metadata", {
+    // fetch("https://generic-crawler.staging.openeduhub.net/set_metadata", {
         method: 'post',
         body: result_json,
         headers: {
