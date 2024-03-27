@@ -11,6 +11,18 @@ body {
     margin: 1rem;
 }
 
+iframe#wlo_iframe {
+    width: 400px;
+    height: 600px;
+    margin: 1rem;
+}
+
+#wlo_options {
+    width: 400px;
+    height: 600px;
+    margin: 1rem;
+}
+
 #form_options {
     padding: 3rem;
 }
@@ -96,3 +108,4 @@ button {
 #institution-frame{
     height: 600px;
 }
+
