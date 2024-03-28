@@ -7,15 +7,15 @@ This is a chrome extension to upload url's to edu-sharing
 
 The plugin contains the WLO form to get metadata from the generic crawler. The button GET METADATA fetches the current tab url and then send a POST request to the generic crawler. The following is an example to get metadata in the WLO form:
 
-![Form to get metadata - URL to crawl](https://github.com/openeduhub/metadata-browser-plugin/blob/add_metadata_form/docs/F7_WLO.png)
+![Form to get metadata - URL to crawl](https://github.com/openeduhub/metadata-browser-plugin/blob/add_WLO_form/docs/F7_WLO.png)
 
 And here the Intended User Role and Kewords are mapped from the generic crawler response to the WLO form.
-![Form to get metadata - URL to crawl](https://github.com/openeduhub/metadata-browser-plugin/blob/add_metadata_form/docs/F4_WLO.png)
+![Form to get metadata - URL to crawl](https://github.com/openeduhub/metadata-browser-plugin/blob/add_WLO_form/docs/F4_WLO.png)
 
 The base url is: 
 [Base url](https://redaktion.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content&data=)
 then following the data flag there should be appended the JSON string encoded using the metadata fields described in: 
-[Base url](https://docs.google.com/spreadsheets/d/1X9aXFkWv5tjEYzf8i1Ki23sadh4ABqi8gURMbuPXpBM/edit?usp=sharing)
+[Metadata in WLO endpoint](https://docs.google.com/spreadsheets/d/1X9aXFkWv5tjEYzf8i1Ki23sadh4ABqi8gURMbuPXpBM/edit?usp=sharing)
 
 ## How to load and debug the web extension in Chrome
 In Google Chrome: open the Extensions tab, then turn "Developer mode" (1.) and "Load unpacked" (2.) as shown in ![Load extension - Chrome](https://github.com/openeduhub/metadata-browser-plugin/blob/add_metadata_form/docs/Fig4.png)
