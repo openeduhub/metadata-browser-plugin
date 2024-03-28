@@ -172,8 +172,8 @@ function load_WLO_url(composed_url) {
 
 function fetchMetadata() {
     local_url = document.getElementById("url_id").value;
-    fetch("http://127.0.0.1:5500/metadata", {
-    // fetch("https://generic-crawler.staging.openeduhub.net/metadata", {
+    // fetch("http://127.0.0.1:5500/metadata", {
+    fetch("https://generic-crawler.staging.openeduhub.net/metadata", {
         method: 'post',
         body: JSON.stringify({ 
                 url: local_url
@@ -250,8 +250,8 @@ function fetchMetadata() {
 }
 
 function persist_metadata(result_json) {
-    fetch("http://127.0.0.1:5500/set_metadata", {
-    // fetch("https://generic-crawler.staging.openeduhub.net/set_metadata", {
+    // fetch("http://127.0.0.1:5500/set_metadata", {
+    fetch("https://generic-crawler.staging.openeduhub.net/set_metadata", {
         method: 'post',
         body: result_json,
         headers: {
