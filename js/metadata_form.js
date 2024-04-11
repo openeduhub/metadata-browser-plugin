@@ -142,7 +142,9 @@ function set_WLO_form(ojson){
     const decoded_url = JSON.stringify(dict);
     const encoded_url = encodeURIComponent(decoded_url);
 
-    var base_WLO_url = "https://redaktion.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content&data=";
+    var repository_url = "https://redaktion.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content";
+    var pre_staging_rep_url = "https://repository.pre-staging.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content";
+    var base_WLO_url = pre_staging_rep_url+"&data=";
     var complete_WLO_url = base_WLO_url+encoded_url;
     load_WLO_url(complete_WLO_url);
 }
