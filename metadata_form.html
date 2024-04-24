@@ -3,16 +3,25 @@
 <head>
     <title>Metadata form</title>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/thinline.css">
+    <script src="js/metadata_form.js"></script>
 </head>
 <link rel="stylesheet" href="css/options.css">
 <body>
 <h1 data-locale="capture_form_headline"></h1>
+
 
 <!--
 <div id="content">
     <div id="status"></div>
     
     <form id="options" style="display: inline">
+
+        <?php 
+            echo "TEST to get session WP data";
+            $wp_session = WP_Session::get_instance();
+            echo $wp_session;
+        ?>
+
         <label data-locale="capture_form_label_url"></label>
         <input id="url_id"/>
         <label data-locale="capture_form_label_title"></label>
@@ -45,7 +54,7 @@
     </form>
 
 
-    <button id="testbutton" data-locale="capture_form_label_button"></button>
+    <button id="getmetadata" data-locale="capture_form_label_button"></button>
 
     <div class="details">
     <button id="select_repository_id">Select repository</button>
@@ -53,19 +62,20 @@
 
     <button id="weiter_id">Weiter</button>
     <p id="persist_metadata_id">Metadata not saved</p>
-    <script src="js/metadata_form.js"></script>
 
 </div>
 -->
 
 
-<div id="wlo_options">
+
+<div id="wlo_options" style="display: block">
+<!--
     <label data-locale="capture_form_label_url"></label>
     <input id="url_id"/>
+-->
+    <iframe id="wlo_iframe" src=https://repository.staging.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_source frameborder="0"></iframe>
 
-    <iframe id="wlo_iframe" src=https://repository.pre-staging.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content frameborder="0"></iframe>
-
-    <button id="testbutton" data-locale="capture_form_label_button"></button>
+    <button id="getmetadata" data-locale="capture_form_label_button"></button>
 
     <div class="details">
     <button id="select_repository_id">Select repository</button>
@@ -73,7 +83,6 @@
 
     <button id="weiter_id">Weiter</button>
     <p id="persist_metadata_id">Metadata not saved</p>
-    <script src="js/metadata_form.js"></script>
 </div>
 
 
@@ -81,12 +90,12 @@
 <div id="content_options">
     <div id="status"></div>
     <button id="logout" style="display: none">Abmelden</button>
-    <iframe id="institution-frame" src="http://app-registry.edu-sharing.com/ng/?reset=true&version=all" frameborder="0"></iframe>
+    <!-- <iframe id="institution-frame" src="http://app-registry.edu-sharing.com/ng/?reset=true&version=all" frameborder="0"></iframe> -->
     <form id="form_options" style="display: none">
         <label for="user">Nutzername</label>
         <input id="user"/>
         <label for="password">Passwort</label>
-        <input type="password" id="password"/>
+        <input type="password" id="password" value="iSU358a23Rx829" />
         <button type="submit" id="save">Anmelden</button>
     </form>
 </div>
