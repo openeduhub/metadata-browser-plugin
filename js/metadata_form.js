@@ -1,25 +1,35 @@
 window.addEventListener("DOMContentLoaded", (event) => {
-    document.getElementById("testbutton").addEventListener("click", function() {
+
+    var getmetadata_button = document.getElementById('getmetadata');
+    if (getmetadata_button != null && getmetadata_button.value == '') {
+        document.getElementById("getmetadata").addEventListener("click", function() {
         
         var active_url = getCurrentTab();
         active_url.then(function(result) {
-            document.getElementById("url_id").value = result;
-            fetchMetadata();
+            // document.getElementById("url_id").value = result;
+            localStorage.setItem("local_url", result);
+            fetchMetadata(result);
         });
         
         // set_WLO_form();
         
-    });
+        });
+    }
 
-    document.getElementById("select_repository_id").addEventListener("click", function() {
+    var select_repository = document.getElementById('select_repository_id');
+    if (select_repository != null && select_repository.value == '') {
+        document.getElementById("select_repository_id").addEventListener("click", function() {
         document.getElementById('content').style.display = 'none';
         document.getElementById('content_options').style.display = 'block';
-    });
-
+        });
+    }
+    
+    document.getElementById('wlo_options').style.display = 'block';
     document.getElementById('content_options').style.display = 'none';
     
+    /*
     document.getElementById("weiter_id").addEventListener("click", function() {
-        let local_url = document.getElementById("url_id").value;
+        // let local_url = document.getElementById("url_id").value;
         let title = document.getElementById("title_id").value;
         let description = document.getElementById("description_id").value;
         let disciplines = document.getElementById("discipline_id").value;
@@ -31,12 +41,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
         let keywords = document.getElementById("keywords_id").value;
         keywords_list = split_words(keywords);
 
-        var license = document.getElementById("license_id").value;
-        if (license === "") {
-            license = "{}"
-        }
-        let license_dict = JSON.parse(license);
-        // let license_author = document.getElementById("license_author_id").value;
+        var license_url = document.getElementById("license_id").value;
+        var author = document.getElementById("author_id").value;
+        var license_dict = {"url": license_url, "author": author};
 
         let new_lrt = document.getElementById("lrt_id").value;
         new_lrt_list = split_words(new_lrt);
@@ -48,19 +55,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
             "educational_context":educational_context_list, 
             "keywords":keywords_list, 
             "license":license_dict, 
-            //"license_author":license_author, 
             "new_lrt":new_lrt_list } );
         
-        sessionStorage.setItem("result_json", result_json);
+        localStorage.setItem("result_json", result_json);
 
         persist_metadata(result_json);
         // document.getElementById('content').style.display = 'none';
         // document.getElementById('content_options').style.display = 'block';
     });
+    */
 
-    function set_status(status, message) {
-        document.getElementById('status').innerHTML = message;
-    }
 
     document.getElementById("form_options").addEventListener("submit", function(event){
     event.preventDefault();
@@ -68,7 +72,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
     });
 
     function set_options() {
-
         var institutions = get_institutions();
         var selectInstitution = document.getElementById('institution');
         for(var i=0;i<institutions.length;i++) {
@@ -86,6 +89,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
             document.getElementById('user').value = items.edu_user;
         });
     }
+
+    document.getElementById("logout").addEventListener("click", logout);
+    set_status('', 'Nicht angemeldet');
+
+    var institution = document.getElementById('institution');
+    if (institution != null && institution.value == '') {
+        set_options();
+    }
+
+    // get_status();
 });
 
 
@@ -121,30 +134,31 @@ function getCurrentURL(tab){
 }
 
 function set_WLO_form(ojson){
+    const local_url = localStorage.getItem("local_url");
     const title = ojson.title;
-
     const description = ojson.description;
-
     var disciplines = ojson.disciplines;
-    disciplines = disciplines.split(', ')
-
+    disciplines = disciplines.split(', ');
     var educontext = ojson.educational_context;
-    educontext = educontext.split(', ')
-
+    educontext = educontext.split(', ');
+    var curriculum = ojson.curriculum;
+    curriculum = curriculum.split(', ');
     var keywords = ojson.keywords;
-    keywords = keywords.split(', ')
-
+    keywords = keywords.split(', ');
     var lrt = ojson.new_lrt;
-    lrt = lrt.split(', ')
-
-    var dict = {"cclom:title":[title], "cclom:general_description":[description], "ccm:taxonid":disciplines, "ccm:educationalcontext":educontext, "cclom:general_keyword":keywords, "ccm:oeh_lrt":lrt };
+    lrt = lrt.split(', ');
+    const license_dict = ojson.license;
+    var license_url = license_dict["url"];
+    var license_author = license_dict["author"];
+    var intendedenduserrole = ojson.intendedenduserrole;
+    var dict = {"cclom:title":[title], "ccm:wwwurl":[local_url], "cclom:general_description":[description], "ccm:taxonid":disciplines, "ccm:curriculum":curriculum, "ccm:educationalcontext":educontext, "cclom:general_keyword":keywords, "ccm:oeh_lrt":lrt, "ccm:custom_license":[license_url], "ccm:author_freetext":[license_author], "ccm:educationalintendedenduserrole":[intendedenduserrole]};
 
     const decoded_url = JSON.stringify(dict);
     const encoded_url = encodeURIComponent(decoded_url);
 
-    var repository_url = "https://redaktion.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content";
-    var pre_staging_rep_url = "https://repository.pre-staging.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_content";
-    var base_WLO_url = pre_staging_rep_url+"&data=";
+    var rep_url = "https://redaktion.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_source";
+    var staging_rep_url = "https://repository.staging.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=wlo_upload_source";
+    var base_WLO_url = staging_rep_url+"&data=";
     var complete_WLO_url = base_WLO_url+encoded_url;
     load_WLO_url(complete_WLO_url);
 }
@@ -161,10 +175,18 @@ function set_metadata_form(ojson){
     document.getElementById("discipline_id").value = ojson.disciplines;
     document.getElementById("educontext_id").value = ojson.educational_context;
     document.getElementById("keywords_id").value = ojson.keywords;
-    let license = JSON.stringify(ojson.license)
-    document.getElementById("license_id").value = license;
+    let license = ojson.license;
+    var license_url = "";
+    if (license.hasOwnProperty("url")) {
+        license_url = license.url;
+    }
+    var license_author = "";
+    if (license.hasOwnProperty("author")) {
+        license_author = license.author;
+    }
+    document.getElementById("license_id").value = license_url;
+    document.getElementById("author_id").value = license_author;
     document.getElementById("lrt_id").value = ojson.new_lrt;
-
 }
 
 function load_WLO_url(composed_url) {
@@ -172,10 +194,10 @@ function load_WLO_url(composed_url) {
     myIframe.setAttribute("src", composed_url);
 }
 
-function fetchMetadata() {
-    local_url = document.getElementById("url_id").value;
-    // fetch("http://127.0.0.1:5500/metadata", {
-    fetch("https://generic-crawler.staging.openeduhub.net/metadata", {
+function fetchMetadata(local_url) {
+    // local_url = document.getElementById("url_id").value;
+    fetch("http://127.0.0.1:5500/metadata", {
+    // fetch("https://generic-crawler.staging.openeduhub.net/metadata", {
         method: 'post',
         body: JSON.stringify({ 
                 url: local_url
@@ -186,14 +208,13 @@ function fetchMetadata() {
         }
     }).then((response) => {
         return response.json()
-    }).then((res) => {        
+    }).then((res) => {
         let ojson = res;
 
-        sessionStorage.setItem("result_json", ojson);
+        localStorage.setItem("result_json", ojson);
 
         set_WLO_form(ojson);
         // set_metadata_form(ojson);
-        
 
         const ul = document.querySelector("ul"),
         input = document.querySelector("input");
@@ -252,8 +273,8 @@ function fetchMetadata() {
 }
 
 function persist_metadata(result_json) {
-    // fetch("http://127.0.0.1:5500/set_metadata", {
-    fetch("https://generic-crawler.staging.openeduhub.net/set_metadata", {
+    fetch("http://127.0.0.1:5500/set_metadata", {
+    // fetch("https://generic-crawler.staging.openeduhub.net/set_metadata", {
         method: 'post',
         body: result_json,
         headers: {
@@ -262,7 +283,7 @@ function persist_metadata(result_json) {
         }
     }).then((response) => {
         return response.json()
-    }).then((res) => {        
+    }).then((res) => {
         console.log(res)
         let result_code = res.code;
         let result_message = res.message;
@@ -325,7 +346,8 @@ function repoLogin(institution) {
                 edu_expires: Math.floor(Date.now() / 1000 + JSON.parse(xhr.responseText).expires_in)
             }, function() {
                 set_status('success', 'Angemeldet als ' + user + ' bei ' + institution);
-                document.getElementById('form_options').style.display = 'none';
+                document.getElementById('wlo_options').style.display = 'block';
+                document.getElementById('content_options').style.display = 'none';
                 document.getElementById('logout').style.display = 'block';
                 document.getElementById("persist_metadata_id").innerHTML = "User Logged in";
             });
@@ -347,26 +369,6 @@ function get_institutions() {
     return institutions;
 }
 
-function set_options() {
-
-    var institutions = get_institutions();
-    var selectInstitution = document.getElementById('institution');
-    for(var i=0;i<institutions.length;i++) {
-        var opt = document.createElement('option');
-        opt.value = institutions[i].url;
-        opt.innerHTML = institutions[i].name;
-        selectInstitution.appendChild(opt);
-    }
-
-    chrome.storage.sync.get({
-        edu_institution: '',
-        edu_user: ''
-    }, function(items) {
-        document.getElementById('institution').value = items.edu_institution;
-        document.getElementById('user').value = items.edu_user;
-    });
-}
-
 function logout() {
     chrome.storage.sync.set({
         edu_institution: '',
@@ -376,7 +378,7 @@ function logout() {
         edu_expires: ''
     }, function() {
         document.getElementById('password').value = '';
-        document.getElementById('options').style.display = 'block';
+        document.getElementById('content_options').style.display = 'block';
         document.getElementById("logout").style.display = 'none';
         set_status('success', 'Erfolgreich abgemeldet');
     });
@@ -404,7 +406,8 @@ function refresh_tokens() {
                     edu_expires: Math.floor(Date.now() / 1000 + JSON.parse(xhr.responseText).expires_in)
                 }, function() {
                     set_status('success', 'Angemeldet als ' + user + ' bei ' + institutionName);
-                    document.getElementById('options').style.display = 'none';
+                    document.getElementById('wlo_options').style.display = 'block';
+                    document.getElementById('content_options').style.display = 'none';
                     document.getElementById('logout').style.display = 'block';
                 });
 
@@ -466,11 +469,50 @@ function receiveMessage(event){
 
         });
     }
+    if(event.data.event=="POST_DATA"){
+        var form_metadata = event.data.data;
+        console.info("-------------------------------------------------------------");
+        parse_wlo_form_metadata(form_metadata);
+        console.info(form_metadata);
+    }
 }
 
-set_status('', 'Nicht angemeldet');
-document.addEventListener('DOMContentLoaded', set_options);
-// implement document.addEventListener('DOMContentLoaded', get_status);
+function set_status(status, message) {
+    document.getElementById('status').innerHTML = message;
+}
 
+function parse_wlo_form_metadata(form_metadata){
+    let local_url = form_metadata["ccm:wwwurl"][0];
+    let title = form_metadata["cclom:title"][0];
+    let description = form_metadata["cclom:general_description"][0];
+    let curriculum = form_metadata["ccm:curriculum"];
+    let intendedenduserrole = form_metadata["ccm:educationalintendedenduserrole"];
 
-document.getElementById("logout").addEventListener("click", logout);
+    let educational_context = form_metadata["ccm:educationalcontext"];
+
+    let keywords = form_metadata["cclom:general_keyword"];
+
+    var license_url = form_metadata["ccm:custom_license"];
+    var author = form_metadata["ccm:author_freetext"];
+    var license_dict = {"url": license_url, "author": author};
+
+    let new_lrt = form_metadata["ccm:oeh_lrt"];
+
+    let result_json = JSON.stringify( {"url": local_url,
+        "title":title, 
+        "description":description,
+        "curriculum":curriculum,
+        "intendedenduserrole":intendedenduserrole, 
+        "educational_context":educational_context, 
+        "keywords":keywords, 
+        "license":license_dict, 
+        "new_lrt":new_lrt} );
+    /*
+        "kidra_disciplines":"",
+        "text_difficulty":"",
+        "text_reading_time":0.0 } );
+    */
+    localStorage.setItem("result_json", result_json);
+    persist_metadata(result_json);
+    
+}
