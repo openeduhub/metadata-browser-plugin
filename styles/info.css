@@ -1,0 +1,68 @@
+/**
+ * This file is part of the WLO Browser Extension.
+ *
+ * Copyright (C) 2025 Harald Holzmann, Various Interactive GmbH
+ * Contact: harald@various.at
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background: white;
+    font-family: system-ui, sans-serif;
+}
+
+body {
+    box-sizing: border-box;
+    padding: 2rem;
+}
+
+#wlo-info-frame {
+    position: fixed;
+    width: 400px;
+    box-shadow: -4px 0 12px rgba(0,0,0,0.2);
+    background: white;
+    top: 0px;
+    left: auto;
+    right: 0px;
+    display: block;
+    height: 100vh;
+    min-width: 0px;
+    z-index: 2147483647;
+    border-top-width: initial;
+    border-right-width: initial;
+    border-bottom-width: initial;
+    border-top-color: initial;
+    border-right-color: initial;
+    border-bottom-color: initial;
+    border-style: none none none solid;
+    border-image: initial;
+    border-left: 2px solid rgb(181, 181, 181);
+}
+
+#wlo-close-frame {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 9999999;
+}

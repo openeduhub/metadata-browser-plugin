@@ -1,0 +1,48 @@
+<!--
+  This file is part of the WLO Browser Extension.
+
+  Copyright (C) 2025 Harald Holzmann, Various Interactive GmbH
+  Contact: harald@various.at
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WLO Extension Einstellungen</title>
+    <link rel="stylesheet" href="../styles/options.css">
+</head>
+<body>
+<img src="../images/logo.svg" alt="WLO Logo" class="logo">
+<h2>WLO Extension Einstellungen</h2>
+
+<h3>Benutzerkonto</h3>
+<p id="user-system"><strong>System:</strong> <span id="stored-system"></span></p>
+<p id="user-username"><strong>Benutzername:</strong> <span id="stored-username"></span></p>
+<button id="logout-btn" class="logout-btn hidden">Abmelden</button>
+<div id="logout-message" class="hidden">✅ Erfolgreich abgemeldet!</div>
+<div id="not-logged-in-message" class="hidden">
+    ❌ Sie sind nicht angemeldet. Du kannst dich anmelden, indem du die WLO-Browser-Extension öffnest.
+</div>
+
+<p id="status"></p>
+
+<script src="../settings/config.js"></script>
+<script src="../scripts/options.js"></script>
+
+</body>
+</html>

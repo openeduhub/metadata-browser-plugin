@@ -1,0 +1,379 @@
+{
+	"info": {
+		"_postman_id": "221e1b2f-ccfe-4431-bbb0-e6196f8d31af",
+		"name": "WLO - Browser Extension",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10424883"
+	},
+	"item": [
+		{
+			"name": "Get available Systems",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://app-registry.edu-sharing.com/servers.php?version=all",
+					"protocol": "https",
+					"host": [
+						"app-registry",
+						"edu-sharing",
+						"com"
+					],
+					"path": [
+						"servers.php"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crawler",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://wlo-api.neu.vrs.at/crawler.php?url=https%3A%2F%2Fklexikon.zum.de%2Fwiki%2FErde_%28Planet%29",
+					"protocol": "https",
+					"host": [
+						"wlo-api",
+						"neu",
+						"vrs",
+						"at"
+					],
+					"path": [
+						"crawler.php"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https%3A%2F%2Fklexikon.zum.de%2Fwiki%2FErde_%28Planet%29"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authentication - Login - Validate Session Copy",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "editorial-test-2022",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "editorial-test-2022",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://repository.staging.openeduhub.net/edu-sharing/rest/authentication/v1/validateSession",
+					"protocol": "https",
+					"host": [
+						"repository",
+						"staging",
+						"openeduhub",
+						"net"
+					],
+					"path": [
+						"edu-sharing",
+						"rest",
+						"authentication",
+						"v1",
+						"validateSession"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authentication - Logout - Destroy Session",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://repository.staging.openeduhub.net/edu-sharing/rest/authentication/v1/destroySession",
+					"protocol": "https",
+					"host": [
+						"repository",
+						"staging",
+						"openeduhub",
+						"net"
+					],
+					"path": [
+						"edu-sharing",
+						"rest",
+						"authentication",
+						"v1",
+						"destroySession"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Formular-API",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://repository.staging.openeduhub.net/edu-sharing/components/embed/mds?set=mds_oeh&group=browser_extension",
+					"protocol": "https",
+					"host": [
+						"repository",
+						"staging",
+						"openeduhub",
+						"net"
+					],
+					"path": [
+						"edu-sharing",
+						"components",
+						"embed",
+						"mds"
+					],
+					"query": [
+						{
+							"key": "set",
+							"value": "mds_oeh"
+						},
+						{
+							"key": "group",
+							"value": "browser_extension"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Site in Repository - Found",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"criteria\": [\n    {\n      \"property\": \"ccm:wwwurl\",\n      \"values\": [\n        \"ttps://klexikon.zum.de\"  \n      ]  \n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://repository.staging.openeduhub.net/edu-sharing/rest/search/v1/queries/-home-/mds_oeh/ngsearch?contentType=FILES&maxItems=10&skipCount=0&propertyFilter=ccm%3Awwwurl",
+					"protocol": "https",
+					"host": [
+						"repository",
+						"staging",
+						"openeduhub",
+						"net"
+					],
+					"path": [
+						"edu-sharing",
+						"rest",
+						"search",
+						"v1",
+						"queries",
+						"-home-",
+						"mds_oeh",
+						"ngsearch"
+					],
+					"query": [
+						{
+							"key": "contentType",
+							"value": "FILES"
+						},
+						{
+							"key": "maxItems",
+							"value": "10"
+						},
+						{
+							"key": "skipCount",
+							"value": "0"
+						},
+						{
+							"key": "propertyFilter",
+							"value": "ccm%3Awwwurl"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -i -X POST \\\n   -H \"Content-Type:application/json\" \\\n   -H \"Accept:application/json\" \\\n   -d \\\n'{\n  \"criteria\": [\n    {\n      \"property\": \"ccm:wwwurl\",\n      \"values\": [\n        \"https://daslernbuero.de/\"  \n      ]  \n    }\n  ]\n}' \\\n 'https://repository.staging.openeduhub.net/edu-sharing/rest/search/v1/queries/-home-/mds_oeh/ngsearch?contentType=FILES&maxItems=10&skipCount=0&propertyFilter=ccm%3Awwwurl' "
+			},
+			"response": []
+		},
+		{
+			"name": "Check Site in Repository - Not Found",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"criteria\": [\n    {\n      \"property\": \"ccm:wwwurl\",\n      \"values\": [\n        \"https://daslernbuero.de/\"  \n      ]  \n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://repository.staging.openeduhub.net/edu-sharing/rest/search/v1/queries/-home-/mds_oeh/ngsearch?contentType=FILES&maxItems=10&skipCount=0&propertyFilter=ccm%3Awwwurl",
+					"protocol": "https",
+					"host": [
+						"repository",
+						"staging",
+						"openeduhub",
+						"net"
+					],
+					"path": [
+						"edu-sharing",
+						"rest",
+						"search",
+						"v1",
+						"queries",
+						"-home-",
+						"mds_oeh",
+						"ngsearch"
+					],
+					"query": [
+						{
+							"key": "contentType",
+							"value": "FILES"
+						},
+						{
+							"key": "maxItems",
+							"value": "10"
+						},
+						{
+							"key": "skipCount",
+							"value": "0"
+						},
+						{
+							"key": "propertyFilter",
+							"value": "ccm%3Awwwurl"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -i -X POST \\\n   -H \"Content-Type:application/json\" \\\n   -H \"Accept:application/json\" \\\n   -d \\\n'{\n  \"criteria\": [\n    {\n      \"property\": \"ccm:wwwurl\",\n      \"values\": [\n        \"https://daslernbuero.de/\"  \n      ]  \n    }\n  ]\n}' \\\n 'https://repository.staging.openeduhub.net/edu-sharing/rest/search/v1/queries/-home-/mds_oeh/ngsearch?contentType=FILES&maxItems=10&skipCount=0&propertyFilter=ccm%3Awwwurl' "
+			},
+			"response": []
+		},
+		{
+			"name": "Werk speichern",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "editorial-test-2022",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "editorial-test-2022",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ccm:wwwurl\": [\n        \"https://edu-sharing.atlassian.net/jira/software/c/projects/BP/list?filter=Sprint%20%3D%20%22BR-EXT%20Sprint%202%3A%20Entwicklung%22&selectedIssue=BP-25\"\n    ],\n    \"cclom:title\": [\n        \"asdfasdf\"\n    ],\n    \"ccm:author_freetext\": [],\n    \"ccm:custom_license\": [],\n    \"ccm:taxonid\": [],\n    \"cclom:general_description\": [],\n    \"cclom:general_keyword\": [],\n    \"virtual:collection_id_primary\": []\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://repository.staging.openeduhub.net/edu-sharing/rest/node/v1/nodes/-home-/-userhome-/children?type=ccm%3Aio&renameIfExists=true",
+					"protocol": "https",
+					"host": [
+						"repository",
+						"staging",
+						"openeduhub",
+						"net"
+					],
+					"path": [
+						"edu-sharing",
+						"rest",
+						"node",
+						"v1",
+						"nodes",
+						"-home-",
+						"-userhome-",
+						"children"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "ccm%3Aio"
+						},
+						{
+							"key": "renameIfExists",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X 'POST' \\\n  'https://redaktion.openeduhub.net/edu-sharing/rest/node/v1/nodes/-home-/-userhome-/children?type=ccm%253Aio&renameIfExists=false&obeyMds=true' \\\n  -H 'accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n\"ccm:wwwurl\":[\"https://test.at\"]\n}'"
+			},
+			"response": []
+		}
+	]
+}

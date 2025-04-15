@@ -1,0 +1,79 @@
+<!--
+  This file is part of the WLO Browser Extension.
+
+  Copyright (C) 2025 Harald Holzmann, Various Interactive GmbH
+  Contact: harald@various.at
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publizieren</title>
+    <link rel="stylesheet" href="../styles/popup.css">
+    <link rel="stylesheet" href="../styles/web-component/styles.css">
+</head>
+<body>
+<div class="container">
+    <img src="../images/logo.svg" alt="WLO Logo" class="wlo-logo">
+
+    <div class="button-container">
+        <button id="help-btn">🦉 Kann ich helfen?</button>
+        <button id="settings-btn">⚙️ Einstellungen</button>
+    </div>
+
+    <div class="propose-work-container">
+        <button id="propose-work-btn">📤 Werk vorschlagen</button>
+    </div>
+
+    <div id="auth-container" class="content hidden">
+        <h2>Login</h2>
+        <p>Bitte melde dich an, um Inhalte zu veröffentlichen.</p>
+        <label for="system-select">System</label>
+        <select id="system-select"></select>
+        <input type="text" id="username" placeholder="Benutzername">
+        <input type="password" id="password" placeholder="Passwort">
+        <button id="login-btn">Anmelden</button>
+        <div id="error-message" class="error-message hidden"></div>
+        <div id="login-success-message" class="success-message hidden">
+            ✅ Erfolgreich eingeloggt!
+        </div>
+        <div class="login-links">
+            <a href="#" id="forgot-password">Passwort vergessen?</a>
+            <a href="#" id="register">Registrieren</a>
+        </div>
+    </div>
+
+    <div id="main-content" class="content hidden">
+        <div class="content">
+            <h2>Publizieren in 3 Schritten</h2>
+            <p>Ergänze Metadaten und veröffentliche deine Kurse schnell & einfach</p>
+            <img src="../images/wlo_owl.png" alt="WLO Eule" class="owl-img">
+            <button id="start-btn">Start</button>
+        </div>
+    </div>
+
+    <iframe id="form-frame" class="hidden"></iframe>
+</div>
+
+<script src="../scripts/main.js"></script>
+<script src="../settings/config.js"></script>
+<script type="module" src="../scripts/popup.js"></script>
+<script src="../scripts/web-component/polyfills.js"></script>
+<script type="module" src="../scripts/web-component/main.js"></script>
+</body>
+</html>

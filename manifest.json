@@ -1,24 +1,53 @@
 {
-  "manifest_version": 2,
-
-  "name": "edu-sharing",
-  "description": "",
-  "version": "1.0",
-  "options_page": "options.html",
+  "manifest_version": 3,
+  "name": "WLO - Wir lernen online",
+  "version": "1.0.0",
+  "description": "Browser Extension für die Services von WLO. Bei WLO handelt es sich einerseits um eine Suchmaschine, als auch um eine Community für freie Bildungsmaterialien (OER).",
+  "homepage_url": "https://wirlernenonline.de/",
   "icons": {
-    "16": "edu16.png",
-    "48": "edu48.png",
-    "128": "edu128.png" },
-  "browser_action": {
-    "default_icon": "edu48.png",
-    "default_popup": "popup.html"
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
   },
   "permissions": [
+    "scripting",
+    "tabs",
     "activeTab",
-    "https://ajax.googleapis.com/",
-    "contextMenus",
-    "notifications",
-    "storage",
-    "*://*/*"
+    "storage"
+  ],
+  "action": {
+    "default_popup": "html/home.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "options_page": "html/options.html",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "html/info.html",
+        "scripts/web-component/*",
+        "styles/web-component/styles.css",
+        "styles/iframe.css"
+      ],
+      "matches": ["<all_urls>"]
+    }
   ]
 }
