@@ -43,6 +43,11 @@ window.addEventListener("message", (event) => {
         contentEl.setAttribute("url", url);
         contentEl.setAttribute("description", description);
 
+        const info = document.getElementById("info-container");
+        if(!event.data.new) {
+            info.remove();
+        }
+
         const container = document.getElementById("wlo-container");
         if (container) container.innerHTML = "";
         document.body.appendChild(contentEl);

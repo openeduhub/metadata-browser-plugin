@@ -20,7 +20,7 @@
 
 const defaultConfig = {
     siteInRepository: {
-        default: "https://redaktion.openeduhub.net/edu-sharing/",
+        default: "https://repository.staging.openeduhub.net/edu-sharing/",
         apiURL: "rest/search/v1/queries/",
         repository: "-home-",
         queryPath: "mds_oeh/ngsearch",

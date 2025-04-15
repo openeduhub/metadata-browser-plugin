@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             chrome.tabs.sendMessage(tab.id, {
                 action: "showInfoFrame",
-                node
+                node,
+                new: true
             });
         } else {
             openSubmissionForm(url);
@@ -95,7 +96,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             chrome.tabs.sendMessage(tab.id, {
                 action: "showInfoFrame",
-                node
+                node,
+                new: true
             });
         } else {
             openSubmissionForm(url);

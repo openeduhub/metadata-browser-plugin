@@ -66,3 +66,10 @@ body {
     cursor: pointer;
     z-index: 9999999;
 }
+
+#info-container {
+    color: #88ab93;
+    background-color: #f9faed;
+    padding: 6px;
+    margin-bottom: 10px;
+}

@@ -43,7 +43,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         iframe.onload = () => {
             iframe.contentWindow.postMessage({
                 type: "wlo-share-data",
-                node: request.node
+                node: request.node,
+                new: request.new
             }, "*");
         };
     }
