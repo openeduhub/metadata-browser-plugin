@@ -18,30 +18,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "showInfoFrame" && request.node) {
-        const existingFrame = document.getElementById("wlo-info-frame");
-        if (existingFrame) existingFrame.remove();
+function openSidebar() {
+    const iframe = document.createElement("iframe");
+    iframe.id = "wlo-info-frame";
+    iframe.src = chrome.runtime.getURL("html/info.html");
+    document.body.appendChild(iframe);
+    document.body.style.marginRight = "400px"; // oder 0px beim Entfernen
+    return iframe;
+}
 
-        const iframe = document.createElement("iframe");
-        iframe.id = "wlo-info-frame";
-        iframe.src = chrome.runtime.getURL("html/info.html");
-        iframe.style.position = "fixed";
-        iframe.style.top = "0";
-        iframe.style.right = "0";
-        iframe.style.width = "420px";
-        iframe.style.height = "100%";
-        iframe.style.border = "none";
-        iframe.style.zIndex = "999999";
-        iframe.style.boxShadow = "rgba(0, 0, 0, 0.3) -4px 0px 10px";
+function getSidebar() {
+    return document.getElementById("wlo-info-frame");
+}
 
-        document.body.appendChild(iframe);
+function closeSidebar() {
+    const sidebar = getSidebar();
+    if (sidebar) sidebar.remove();
+}
 
-        document.body.style.marginRight = "400px"; // oder 0px beim Entfernen
-
-        //send data to iframe
-        iframe.onload = () => {
-            iframe.contentWindow.postMessage({
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {    if (request.action === "showInfoFrame" && request.node) {
+        closeSidebar();
+        const sidebar = openSidebar();
+        sidebar.onload = () => {
+            sidebar.contentWindow.postMessage({
                 type: "wlo-share-data",
                 node: request.node,
                 new: request.new
@@ -52,7 +51,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 window.addEventListener("message", (event) => {
     if (event.data?.action === "close-wlo-frame") {
-        const iframe = document.getElementById("wlo-info-frame");
-        if (iframe) iframe.remove();
+        closeSidebar();
     }
 });
