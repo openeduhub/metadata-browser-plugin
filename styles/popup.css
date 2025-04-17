@@ -21,8 +21,6 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    width: 780px;
-    height: 550px;
     background-color: #fff;
 }
 
@@ -83,7 +81,7 @@ p {
 
 #form-frame {
     width: 100%;
-    height: 400px;
+    height: 100vh;
     border: none;
     margin-top: 10px;
 }

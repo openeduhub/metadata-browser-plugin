@@ -33,3 +33,11 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     });
 });
+
+// open sidebar when activate the extension
+chrome.action.onClicked.addListener(function (tab) {
+    chrome.tabs.sendMessage(tab.id, {
+        action: "showInfoFrame",
+        file: "html/home.html"
+    });
+});

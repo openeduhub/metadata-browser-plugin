@@ -17,7 +17,6 @@
     "storage"
   ],
   "action": {
-    "default_popup": "html/home.html",
     "default_icon": {
       "16": "icons/16.png",
       "32": "icons/32.png",
@@ -44,6 +43,7 @@
     {
       "resources": [
         "html/info.html",
+        "html/home.html",
         "scripts/web-component/*",
         "styles/web-component/styles.css",
         "styles/iframe.css"

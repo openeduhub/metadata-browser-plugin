@@ -18,10 +18,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-function openSidebar() {
+function openSidebar(file) {
+    file = file ?? "html/info.html";
     const iframe = document.createElement("iframe");
     iframe.id = "wlo-info-frame";
-    iframe.src = chrome.runtime.getURL("html/info.html");
+    iframe.src = chrome.runtime.getURL(file);
     document.body.appendChild(iframe);
     document.body.style.marginRight = "400px"; // oder 0px beim Entfernen
     return iframe;
@@ -36,9 +37,10 @@ function closeSidebar() {
     if (sidebar) sidebar.remove();
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {    if (request.action === "showInfoFrame" && request.node) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {    
+    if (request.action === "showInfoFrame") {
         closeSidebar();
-        const sidebar = openSidebar();
+        const sidebar = openSidebar(request.file);
         sidebar.onload = () => {
             sidebar.contentWindow.postMessage({
                 type: "wlo-share-data",
