@@ -27,7 +27,7 @@ async function checkUrl(url) {
                 baseApiUrl = data.selectedSystemUrl + defaultConfig.siteInRepository.apiURL;
             }
 
-            const fullApiUrl = `${baseApiUrl}${defaultConfig.siteInRepository.repository}/${defaultConfig.siteInRepository.queryPath}?contentType=FILES&maxItems=1&skipCount=0&propertyFilter=ccm%3Awwwurl`;
+            const fullApiUrl = `${baseApiUrl}${defaultConfig.siteInRepository.repository}/${defaultConfig.siteInRepository.queryPath}?contentType=FILES&maxItems=1&skipCount=0&propertyFilter=-all-`;
 
             const requestBody = {
                 criteria: [{property: "ccm:wwwurl", values: [url]}]

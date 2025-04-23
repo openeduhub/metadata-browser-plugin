@@ -20,24 +20,25 @@
 
 window.addEventListener("message", (event) => {
     if (event.data?.type === "wlo-share-data" && event.data.node) {
-        const node = event.data.node;
 
+        const node = event.data.node;
+        console.debug(node);
+        
         const contentEl = document.createElement("wlo-share-content");
 
-        let title = node.title || "";
+        let title = node?.properties?.["cclom:title"]?.[0] || node.title;
         let url = node.content?.url || "";
         let description = node?.properties?.["cclom:general_description"]?.[0] || "";
-
-
+        
         if(node.node) {
-            title = node.node.name;
+            title = node.node?.properties?.["cclom:title"]?.[0] || node.node.title;
             description = node?.node?.properties?.["cclom:general_description"]?.[0] || "";
             url = node.node.content?.url || "";
         }
 
-        if(node.name) {
-            title = node.name;
-        }
+        console.debug(title);
+        console.debug(url);
+        console.debug(description);
 
         contentEl.setAttribute("title", title);
         contentEl.setAttribute("url", url);
