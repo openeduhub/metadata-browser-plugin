@@ -24,7 +24,6 @@ html, body {
     width: 100vw;
     height: 100vh;
     overflow: auto;
-    background: white;
     font-family: system-ui, sans-serif;
 }
 
