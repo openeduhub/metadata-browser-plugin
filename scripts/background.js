@@ -38,6 +38,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.action.onClicked.addListener(function (tab) {
     chrome.tabs.sendMessage(tab.id, {
         action: "showInfoFrame",
-        file: "html/home.html"
+        file: "html/home.html",
+        closeIfOpen: true
     });
 });

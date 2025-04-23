@@ -18,13 +18,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+isSidebarOpen = false;
+
 function openSidebar(file) {
+    closeSidebar();
     file = file ?? "html/info.html";
     const iframe = document.createElement("iframe");
     iframe.id = "wlo-info-frame";
     iframe.src = chrome.runtime.getURL(file);
     document.body.appendChild(iframe);
     document.body.style.marginRight = "400px"; // oder 0px beim Entfernen
+    isSidebarOpen = true;
     return iframe;
 }
 
@@ -33,21 +37,25 @@ function getSidebar() {
 }
 
 function closeSidebar() {
-    const sidebar = getSidebar();
-    if (sidebar) sidebar.remove();
+    // it might be the case that we opened multiple sidebars
+    document.querySelectorAll("#wlo-info-frame").forEach(frame => frame.remove());
+    isSidebarOpen = false;
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {    
     if (request.action === "showInfoFrame") {
-        closeSidebar();
-        const sidebar = openSidebar(request.file);
-        sidebar.onload = () => {
-            sidebar.contentWindow.postMessage({
-                type: "wlo-share-data",
-                node: request.node,
-                new: request.new
-            }, "*");
-        };
+        if (request.closeIfOpen && isSidebarOpen) {
+            closeSidebar();
+        } else {
+            const sidebar = openSidebar(request.file);
+            sidebar.onload = () => {
+                sidebar.contentWindow.postMessage({
+                    type: "wlo-share-data",
+                    node: request.node,
+                    new: request.new
+                }, "*");
+            };
+        }
     }
 });
 
