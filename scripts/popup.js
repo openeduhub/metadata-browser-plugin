@@ -33,8 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const url = tab.url;
 
         const result = await checkUrl(url);
-        hideSpinner();
-
+        
         if (result.alreadyExists) {
             window.close();
 
@@ -87,8 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const url = tab.url;
 
         const result = await checkUrl(url);
-        hideSpinner();
-
+        
         if (result.alreadyExists) {
             window.close();
 
@@ -124,9 +122,20 @@ async function openSubmissionForm(currentUrl) {
         redirect: "follow"
     };
 
-    let crawlerResponse = await fetch(defaultConfig.crawler.url + `?url=${encodeURIComponent(currentUrl)}`, requestOptions);
-    let crawlerData = await crawlerResponse.json();
+    let crawlerResponse;
+    try {
+        crawlerResponse = await fetch(defaultConfig.crawler.url + `?url=${encodeURIComponent(currentUrl)}`, requestOptions);
+        if (!crawlerResponse.ok) {
+            throw new Error(`HTTP-Fehler: ${crawlerResponse.status} ${crawlerResponse.statusText}`);
+        }
+    } catch(error) {
+        console.error("Fehler beim Crawler-Request:", error.message);
+        hideSpinner();
+        showErrorScreen(error.message);
+    }
 
+    hideSpinner();
+    let crawlerData = await crawlerResponse.json();
     let formData = buildFormData(crawlerData);
 
     let encodedData = encodeURIComponent(JSON.stringify(formData));

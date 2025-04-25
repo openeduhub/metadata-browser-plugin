@@ -48,8 +48,8 @@ const defaultConfig = {
     saveUrl: "rest/node/v1/nodes/-home-/-userhome-/children?type=ccm%3Aio&renameIfExists=true",
     systems: "https://app-registry.edu-sharing.com/servers.php?version=all",
     crawler: {
-        url : "https://wlo-api.neu.vrs.at/crawler.php",
-        //url : "https://generic-crawler-ui-metadataapi.staging.openeduhub.net/metadata",
+        //url : "https://wlo-api.neu.vrs.at/crawler.php",
+        url : "https://generic-crawler-ui-metadataapi.staging.openeduhub.net/metadata",
         apiKey: "xxx"
     }
 };
