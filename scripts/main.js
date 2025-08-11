@@ -44,12 +44,26 @@ async function checkUrl(url) {
                 });
 
                 const json = await response.json();
-                const node = json.nodes?.[0];
 
-                resolve({
-                    alreadyExists: json.pagination?.total >= 1,
-                    node
+                const nodes = Array.isArray(json?.nodes) ? json.nodes : [];
+
+                // EXAKTER Match auf properties["ccm:wwwurl"]
+                const exactNode = nodes.find((node) => {
+                    const urls = Array.isArray(node?.properties?.["ccm:wwwurl"])
+                        ? node.properties["ccm:wwwurl"]
+                        : [];
+                    return urls.some((u) => typeof u === "string" && u === url);
                 });
+
+                if (exactNode) {
+                    resolve({
+                        alreadyExists: true,
+                        node: exactNode
+                    });
+                    return;
+                }
+
+                resolve({ alreadyExists: false });
             } catch (error) {
                 resolve({ alreadyExists: false });
             }
