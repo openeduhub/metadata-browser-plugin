@@ -19,19 +19,28 @@
  */
 
 importScripts('../settings/config.js');
+importScripts('../scripts/configManager.js');
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "logout") {
         chrome.storage.local.remove("authToken");
+        return false;
+    } else if (request.action === "getConfig") {
+        configManager.getConfig()
+            .then(config => {
+                sendResponse({ success: true, config: config });
+            })
+            .catch(error => {
+                sendResponse({ success: false, error: error.message });
+            });
+        
+        return true;
     }
+    return false;
 });
 
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.sync.get(["config"], (data) => {
-        if (data.config === undefined) {
-            chrome.storage.sync.set({config: defaultConfig});
-        }
-    });
+chrome.runtime.onInstalled.addListener(async () => {
+    await configManager.initializeConfig();
 });
 
 // open sidebar when activate the extension

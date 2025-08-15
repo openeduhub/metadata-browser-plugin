@@ -49,29 +49,31 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    document.getElementById("forgot-password").addEventListener("click", function () {
+    document.getElementById("forgot-password").addEventListener("click", async function () {
+        const config = await configManager.getConfig();
         let systemSelect = document.getElementById("system-select");
         let selectedOption = systemSelect.options[systemSelect.selectedIndex];
         let systemUrl = selectedOption.getAttribute("data-url");
 
         if (selectedOption.text.includes("WLO") || selectedOption.text.includes("WirLernenOnline")) {
-            systemUrl = defaultConfig.auth.wloPasswordResetUrl;
+            systemUrl = config.auth.wloPasswordResetUrl;
         } else {
-            systemUrl = systemUrl + defaultConfig.auth.passwordResetUrl;
+            systemUrl = systemUrl + config.auth.passwordResetUrl;
         }
 
         chrome.tabs.create({url: systemUrl});
     });
 
-    document.getElementById("register").addEventListener("click", function () {
+    document.getElementById("register").addEventListener("click", async function () {
+        const config = await configManager.getConfig();
         let systemSelect = document.getElementById("system-select");
         let selectedOption = systemSelect.options[systemSelect.selectedIndex];
         let systemUrl = selectedOption.getAttribute("data-url");
 
         if (selectedOption.text.includes("WLO") || selectedOption.text.includes("WirLernenOnline")) {
-            systemUrl = defaultConfig.auth.wloRegisterUrl;
+            systemUrl = config.auth.wloRegisterUrl;
         } else {
-            systemUrl = systemUrl + defaultConfig.auth.registerUrl;
+            systemUrl = systemUrl + config.auth.registerUrl;
         }
 
         chrome.tabs.create({url: systemUrl});
@@ -114,7 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function openSubmissionForm(currentUrl) {
     const myHeaders = new Headers();
-    myHeaders.append("X-API-Key", defaultConfig.crawler.apiKey);
+    const config = await configManager.getConfig();
+    myHeaders.append("X-API-Key", config.crawler.apiKey);
 
     const requestOptions = {
         method: "GET",
@@ -124,7 +127,7 @@ async function openSubmissionForm(currentUrl) {
 
     let crawlerResponse;
     try {
-        crawlerResponse = await fetch(defaultConfig.crawler.url + `?url=${encodeURIComponent(currentUrl)}`, requestOptions);
+        crawlerResponse = await fetch(config.crawler.url + `?url=${encodeURIComponent(currentUrl)}`, requestOptions);
         if (!crawlerResponse.ok) {
             throw new Error(`HTTP-Fehler: ${crawlerResponse.status} ${crawlerResponse.statusText}`);
         }
@@ -141,9 +144,9 @@ async function openSubmissionForm(currentUrl) {
     let encodedData = encodeURIComponent(JSON.stringify(formData));
 
     chrome.storage.local.get(["selectedSystemUrl"], async (data) => {
-        let formUrl = data.selectedSystemUrl + `${defaultConfig.formUrl}&data=${encodedData}`;
+        let formUrl = data.selectedSystemUrl + `${config.formUrl}&data=${encodedData}`;
         if (!data.selectedSystemUrl) {
-            formUrl = `${defaultConfig.publishPublic.formUrl}&data=${encodedData}`;
+            formUrl = `${config.publishPublic.formUrl}&data=${encodedData}`;
         }
 
         document.getElementById("main-content").style.display = "none";
@@ -160,16 +163,17 @@ async function openSubmissionForm(currentUrl) {
 
 async function loadSystemOptions() {
     try {
-        let response = await fetch(defaultConfig.systems);
+        const config = await configManager.getConfig();
+        let response = await fetch(config.systems);
         let systems = await response.json();
         let systemSelect = document.getElementById("system-select");
 
         systemSelect.innerHTML = "";
         systems.forEach(system => {
-            if (system.name === "WLO (staging)") {
+            if (system.name === "WLO (staging)" || system.name === "WirLernenOnline") {
                 let option = document.createElement("option");
                 option.value = system.name;
-                option.textContent = "WLO (Staging)";
+                option.textContent = system.name;
                 option.dataset.url = system.url;
                 systemSelect.appendChild(option);
             } else {
@@ -186,10 +190,11 @@ async function loadSystemOptions() {
 }
 
 async function checkLoginStatus() {
+    const config = await configManager.getConfig();
     chrome.storage.local.get(["authToken", "selectedSystem", "selectedSystemUrl"], async (data) => {
         if (data.authToken && data.selectedSystem && data.selectedSystemUrl) {
             try {
-                let response = await fetch(data.selectedSystemUrl + defaultConfig.auth.loginUrl, {
+                let response = await fetch(data.selectedSystemUrl + config.auth.loginUrl, {
                     method: "GET",
                     headers: {
                         "Authorization": `Basic ${data.authToken}`,
@@ -230,6 +235,7 @@ function showPublishMenu() {
 }
 
 async function login() {
+    const config = await configManager.getConfig();
     let username = document.getElementById("username").value.trim();
     let password = document.getElementById("password").value.trim();
 
@@ -246,7 +252,7 @@ async function login() {
 
     let authToken = btoa(`${username}:${password}`);
 
-    let loginUrl = systemUrl + defaultConfig.auth.loginUrl;
+    let loginUrl = systemUrl + config.auth.loginUrl;
 
     try {
         let response = await fetch(loginUrl, {
@@ -300,7 +306,8 @@ function hideErrorMessage() {
     }
 }
 
-window.addEventListener("message", (event) => {
+window.addEventListener("message", async (event) => {
+    const config = await configManager.getConfig();
     chrome.storage.local.get(["selectedSystemUrl"], async (data) => {
         let formEventOrigin = "";
         if (data.selectedSystemUrl) {
@@ -308,7 +315,7 @@ window.addEventListener("message", (event) => {
         }
 
         if (event.data.event === 'POST_DATA') {
-            if (event.origin === formEventOrigin || event.origin === defaultConfig.publishPublic.eventOrigin) {
+            if (event.origin === formEventOrigin || event.origin === config.publishPublic.eventOrigin) {
                 sendPostData(event);
             }
         }
@@ -333,9 +340,10 @@ async function sendPostData(event) {
 }
 
 async function proposeWorkAsGuest(event, data) {
-    const username = defaultConfig.publishPublic.username;
-    const password = defaultConfig.publishPublic.password;
-    const createNodeUrl = defaultConfig.publishPublic.createNode;
+    const config = await configManager.getConfig();
+    const username = config.publishPublic.username;
+    const password = config.publishPublic.password;
+    const createNodeUrl = config.publishPublic.createNode;
 
     const authHeader = "Basic " + btoa(`${username}:${password}`);
 
@@ -387,9 +395,10 @@ function buildMetaData(eventData) {
 }
 
 async function setMetadata(nodeId, data, createNodeData) {
-    const username = defaultConfig.publishPublic.username;
-    const password = defaultConfig.publishPublic.password;
-    const addMetadataUrl = defaultConfig.publishPublic.addMetadata;
+    const config = await configManager.getConfig();
+    const username = config.publishPublic.username;
+    const password = config.publishPublic.password;
+    const addMetadataUrl = config.publishPublic.addMetadata;
     const authHeader = "Basic " + btoa(`${username}:${password}`);
 
     try {
@@ -416,9 +425,10 @@ async function setMetadata(nodeId, data, createNodeData) {
 }
 
 async function startWorkflow(nodeId, data, createNodeData) {
-    const username = defaultConfig.publishPublic.username;
-    const password = defaultConfig.publishPublic.password;
-    const startWorkflowUrl = defaultConfig.publishPublic.startWorflow;
+    const config = await configManager.getConfig();
+    const username = config.publishPublic.username;
+    const password = config.publishPublic.password;
+    const startWorkflowUrl = config.publishPublic.startWorflow;
     const authHeader = "Basic " + btoa(`${username}:${password}`);
 
     const workflowPayload = {
@@ -484,7 +494,8 @@ function showErrorScreen() {
 }
 
 async function saveToRepository(event, data) {
-    const response = await fetch(data.selectedSystemUrl + defaultConfig.saveUrl, {
+    const config = await configManager.getConfig();
+    const response = await fetch(data.selectedSystemUrl + config.saveUrl, {
         method: "POST",
         headers: {
             "Authorization": `Basic ${data.authToken}`,
@@ -609,9 +620,10 @@ function buildFormData(crawlerData) {
 }
 
 async function setCollections(nodeId, data, createNodeData) {
-    const username = defaultConfig.publishPublic.username;
-    const password = defaultConfig.publishPublic.password;
-    const addCollectionUrl = defaultConfig.publishPublic.addCollection;
+    const config = await configManager.getConfig();
+    const username = config.publishPublic.username;
+    const password = config.publishPublic.password;
+    const addCollectionUrl = config.publishPublic.addCollection;
     const authHeader = "Basic " + btoa(`${username}:${password}`);
 
     const collectionUrls = data?.['virtual:collection_id_primary'] || [];

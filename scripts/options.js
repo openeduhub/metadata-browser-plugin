@@ -45,10 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById("logout-btn").addEventListener("click", function () {
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+        const config = await configManager.getConfig();
         chrome.storage.local.get(["authToken", "selectedSystemUrl"], function (data) {
             if (data.authToken && data.selectedSystemUrl) {
-                fetch(data.selectedSystemUrl + defaultConfig.auth.logoutUrl, {
+                fetch(data.selectedSystemUrl + config.auth.logoutUrl, {
                     method: "GET",
                     headers: {
                         "Authorization": `Basic ${data.authToken}`,

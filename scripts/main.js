@@ -19,15 +19,32 @@
  */
 
 async function checkUrl(url) {
+    console.log(`Starte URL Check`);
+    return new Promise((resolve) => {
+        // Konfiguration vom Background Script anfordern
+        chrome.runtime.sendMessage({ action: "getConfig" }, async (configResponse) => {
+            if (!configResponse.success) {
+                console.error('Fehler beim Laden der Konfiguration:', configResponse.error);
+                // Fallback auf defaultConfig
+                resolve(await checkUrlWithConfig(url, defaultConfig));
+                return;
+            }
+            resolve(await checkUrlWithConfig(url, configResponse.config));
+        });
+    });
+}        
+
+async function checkUrlWithConfig(url, config) {
+    console.log(`Laufe mit dieser Konfig:`, config);
     return new Promise((resolve) => {
         chrome.storage.sync.get(["authToken", "selectedSystemUrl"], async (data) => {
-            let baseApiUrl = defaultConfig.siteInRepository.default + defaultConfig.siteInRepository.apiURL;
+            let baseApiUrl = config.siteInRepository.default + config.siteInRepository.apiURL;
 
             if (data.authToken && data.selectedSystemUrl) {
-                baseApiUrl = data.selectedSystemUrl + defaultConfig.siteInRepository.apiURL;
+                baseApiUrl = data.selectedSystemUrl + config.siteInRepository.apiURL;
             }
 
-            const fullApiUrl = `${baseApiUrl}${defaultConfig.siteInRepository.repository}/${defaultConfig.siteInRepository.queryPath}?contentType=FILES&maxItems=1&skipCount=0&propertyFilter=-all-`;
+            const fullApiUrl = `${baseApiUrl}${config.siteInRepository.repository}/${config.siteInRepository.queryPath}?contentType=FILES&maxItems=1&skipCount=0&propertyFilter=-all-`;
 
             const requestBody = {
                 criteria: [{property: "ccm:wwwurl", values: [url]}]
