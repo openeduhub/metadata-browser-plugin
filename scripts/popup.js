@@ -235,13 +235,18 @@ function showPublishMenu() {
 }
 
 async function login() {
-    const config = await configManager.getConfig();
     let username = document.getElementById("username").value.trim();
     let password = document.getElementById("password").value.trim();
 
     let systemSelect = document.getElementById("system-select");
     let selectedOption = systemSelect.options[systemSelect.selectedIndex];
     let systemUrl = selectedOption.getAttribute("data-url");
+
+    if (selectedOption.value === "WirLernenOnline") {
+        await configManager.switchToWloConfig();
+    } else {
+        await configManager.switchToDefaultConfig();
+    }
 
     if (username.length < 3 || password.length < 3) {
         showErrorMessage("❌ Benutzername und Passwort müssen mindestens 3 Zeichen lang sein.");
@@ -252,7 +257,9 @@ async function login() {
 
     let authToken = btoa(`${username}:${password}`);
 
+    const config = await configManager.getConfig();
     let loginUrl = systemUrl + config.auth.loginUrl;
+    console.log(`Login on `, loginUrl);
 
     try {
         let response = await fetch(loginUrl, {
