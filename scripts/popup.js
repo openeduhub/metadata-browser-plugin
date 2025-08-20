@@ -22,6 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
     checkLoginStatus();
     loadSystemOptions();
 
+    document.getElementById("password").addEventListener("keyup", (event) => {
+        if (event.keyCode === 13) { 
+            document.getElementById("login-btn").click();        
+        }
+    });
     document.getElementById("login-btn").addEventListener("click", login);
 
     document.getElementById("propose-work-btn").addEventListener("click", async function () {
@@ -191,7 +196,7 @@ async function loadSystemOptions() {
 
 async function checkLoginStatus() {
     const config = await configManager.getConfig();
-    chrome.storage.local.get(["authToken", "selectedSystem", "selectedSystemUrl"], async (data) => {
+    chrome.storage.local.get(["authToken", "selectedSystem", "selectedSystemUrl", "username"], async (data) => {
         if (data.authToken && data.selectedSystem && data.selectedSystemUrl) {
             try {
                 let response = await fetch(data.selectedSystemUrl + config.auth.loginUrl, {
@@ -205,7 +210,7 @@ async function checkLoginStatus() {
                 let result = await response.json();
 
                 if (result.statusCode === "OK") {
-                    showPublishMenu();
+                    showPublishMenu(data.selectedSystem, data.username);
 
                     const proposeWorkBtn = document.getElementById("propose-work-btn");
                     if (proposeWorkBtn) {
@@ -229,9 +234,11 @@ function showLoginForm() {
     document.getElementById("main-content").classList.add("hidden");
 }
 
-function showPublishMenu() {
+function showPublishMenu(system, username) {
     document.getElementById("auth-container").classList.add("hidden");
     document.getElementById("main-content").classList.remove("hidden");
+    document.getElementById("stored-username").textContent = username;
+    document.getElementById("stored-system").textContent = system;
 }
 
 async function login() {
