@@ -19,6 +19,23 @@
  */
 
 const defaultConfig = {
+    // Repository Configuration (ONLY STAGING)
+    repository: {
+        staging: {
+            baseUrl: "https://repository.staging.openeduhub.net/edu-sharing/",
+            name: "WLO Staging",
+            enabled: true
+        },
+        production: {
+            baseUrl: "https://repository.openeduhub.net/edu-sharing/",
+            name: "WLO Production",
+            enabled: false // ← Deaktiviert für jetzt
+        }
+    },
+    
+    // Active repository (only staging)
+    activeRepository: "staging",
+    
     siteInRepository: {
         default: "https://repository.staging.openeduhub.net/edu-sharing/",
         apiURL: "rest/search/v1/queries/",
@@ -26,6 +43,12 @@ const defaultConfig = {
         queryPath: "mds_oeh/ngsearch",
     },
     formUrl: "components/embed/mds?set=mds_oeh&group=browser_extension",
+    
+    // Canvas Component Configuration
+    canvas: {
+        url: "https://metadata-agent-canvas.vercel.app/",
+        mode: "browser-extension"
+    },
     auth: {
         loginUrl: "rest/authentication/v1/validateSession",
         logoutUrl: "rest/authentication/v1/destroySession",

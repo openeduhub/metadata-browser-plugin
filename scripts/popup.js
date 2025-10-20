@@ -19,35 +19,64 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+    console.log('🚀 Popup loaded');
+    
     checkLoginStatus();
     loadSystemOptions();
 
-    document.getElementById("login-btn").addEventListener("click", login);
+    // Login button
+    const loginBtn = document.getElementById("login-btn");
+    if (loginBtn) {
+        loginBtn.addEventListener("click", login);
+        console.log('✅ Login button event listener registered');
+    } else {
+        console.error('❌ Login button not found');
+    }
 
-    document.getElementById("propose-work-btn").addEventListener("click", async function () {
-        showSpinner();
+    // Propose work button (Guest mode)
+    const proposeWorkBtn = document.getElementById("propose-work-btn");
+    if (proposeWorkBtn) {
+        proposeWorkBtn.addEventListener("click", async function () {
+            console.log('📤 Propose work button clicked (Guest mode)');
+            
+            try {
+                showSpinner();
+                document.getElementById("auth-container").classList.add("hidden");
 
-        document.getElementById("auth-container").classList.add("hidden");
+                const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+                console.log('🔍 Current tab:', tab.id, tab.url);
+                const url = tab.url;
 
-        const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-        const url = tab.url;
+                console.log('🔎 Checking if URL already exists...');
+                const result = await checkUrl(url);
+                console.log('✅ URL check result:', result);
+                
+                if (result.alreadyExists) {
+                    console.log('ℹ️ URL already exists, showing info frame');
+                    window.close();
 
-        const result = await checkUrl(url);
-        
-        if (result.alreadyExists) {
-            window.close();
+                    const node = result.node;
 
-            const node = result.node;
-
-            chrome.tabs.sendMessage(tab.id, {
-                action: "showInfoFrame",
-                node,
-                new: true
-            });
-        } else {
-            openSubmissionForm(url);
-        }
-    });
+                    chrome.tabs.sendMessage(tab.id, {
+                        action: "showInfoFrame",
+                        node,
+                        new: true
+                    });
+                } else {
+                    console.log('✨ URL is new, opening submission form');
+                    await openSubmissionForm(url);
+                }
+            } catch (error) {
+                console.error('❌ Propose work button error:', error);
+                console.error('❌ Stack:', error.stack);
+                alert('Fehler: ' + error.message);
+                hideSpinner();
+            }
+        });
+        console.log('✅ Propose work button event listener registered');
+    } else {
+        console.error('❌ Propose work button not found in DOM');
+    }
 
     document.getElementById("forgot-password").addEventListener("click", function () {
         let systemSelect = document.getElementById("system-select");
@@ -77,31 +106,38 @@ document.addEventListener("DOMContentLoaded", function () {
         chrome.tabs.create({url: systemUrl});
     });
 
-    document.getElementById("start-btn").addEventListener("click", async function () {
-        showSpinner();
+    // Start button (User mode)
+    const startBtn = document.getElementById("start-btn");
+    if (startBtn) {
+        startBtn.addEventListener("click", async function () {
+            console.log('▶️ Start button clicked (User mode)');
+            showSpinner();
 
-        document.getElementById("main-content").classList.add("hidden");
+            document.getElementById("main-content").classList.add("hidden");
 
-        const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-        const url = tab.url;
+            const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+            const url = tab.url;
 
-        const result = await checkUrl(url);
-        
-        if (result.alreadyExists) {
-            window.close();
+            const result = await checkUrl(url);
+            
+            if (result.alreadyExists) {
+                window.close();
 
-            const node = result.node;
+                const node = result.node;
 
-            chrome.tabs.sendMessage(tab.id, {
-                action: "showInfoFrame",
-                node,
-                new: true
-            });
-        } else {
-            openSubmissionForm(url);
-        }
-
-    });
+                chrome.tabs.sendMessage(tab.id, {
+                    action: "showInfoFrame",
+                    node,
+                    new: true
+                });
+            } else {
+                openSubmissionForm(url);
+            }
+        });
+        console.log('✅ Start button event listener registered');
+    } else {
+        console.error('❌ Start button not found in DOM');
+    }
 
     document.getElementById("help-btn").addEventListener("click", function () {
         chrome.tabs.create({url: "https://wirlernenonline.de/faq/"});
@@ -113,75 +149,207 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function openSubmissionForm(currentUrl) {
-    const myHeaders = new Headers();
-    myHeaders.append("X-API-Key", defaultConfig.crawler.apiKey);
-
-    const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow"
-    };
-
-    let crawlerResponse;
+    console.log('📋 openSubmissionForm called with URL:', currentUrl);
+    console.log('🔍 Current URL:', currentUrl);
     try {
-        crawlerResponse = await fetch(defaultConfig.crawler.url + `?url=${encodeURIComponent(currentUrl)}`, requestOptions);
-        if (!crawlerResponse.ok) {
-            throw new Error(`HTTP-Fehler: ${crawlerResponse.status} ${crawlerResponse.statusText}`);
-        }
-    } catch(error) {
-        console.error("Fehler beim Crawler-Request:", error.message);
+        await openCanvasWithExtraction(currentUrl);
+        console.log('✅ openCanvasWithExtraction completed');
+    } catch (error) {
+        console.error('❌ openSubmissionForm failed:', error);
+        console.error('❌ Error stack:', error.stack);
+        alert('Fehler beim Öffnen der Canvas-Komponente: ' + error.message);
         hideSpinner();
-        showErrorScreen(error.message);
     }
+}
 
-    hideSpinner();
-    let crawlerData = await crawlerResponse.json();
-    let formData = buildFormData(crawlerData);
-
-    let encodedData = encodeURIComponent(JSON.stringify(formData));
-
-    chrome.storage.local.get(["selectedSystemUrl"], async (data) => {
-        let formUrl = data.selectedSystemUrl + `${defaultConfig.formUrl}&data=${encodedData}`;
-        if (!data.selectedSystemUrl) {
-            formUrl = `${defaultConfig.publishPublic.formUrl}&data=${encodedData}`;
+/**
+ * Format extracted page data as readable text for Canvas textarea
+ */
+function formatPageDataAsText(dataPackage) {
+    let text = '';
+    
+    // Title
+    if (dataPackage.title) {
+        text += `Titel: ${dataPackage.title}\n\n`;
+    }
+    
+    // URL
+    text += `URL: ${dataPackage.url}\n\n`;
+    
+    // Meta Description
+    if (dataPackage.meta?.description) {
+        text += `Beschreibung: ${dataPackage.meta.description}\n\n`;
+    }
+    
+    // Meta Keywords
+    if (dataPackage.meta?.keywords) {
+        text += `Keywords: ${dataPackage.meta.keywords}\n\n`;
+    }
+    
+    // Author
+    if (dataPackage.meta?.author) {
+        text += `Autor: ${dataPackage.meta.author}\n\n`;
+    }
+    
+    // Crawler Data (if available)
+    if (dataPackage.crawlerData) {
+        text += `--- Generischer Crawler Daten ---\n`;
+        if (dataPackage.crawlerData.title) {
+            text += `Crawler Titel: ${dataPackage.crawlerData.title}\n`;
         }
+        if (dataPackage.crawlerData.description) {
+            text += `Crawler Beschreibung: ${dataPackage.crawlerData.description}\n`;
+        }
+        text += `\n`;
+    }
+    
+    // Main Content (first 3000 chars)
+    const content = dataPackage.content?.main || dataPackage.content?.cleaned || '';
+    if (content) {
+        text += `Inhalt:\n${content.substring(0, 3000)}`;
+    }
+    
+    return text;
+}
 
-        document.getElementById("main-content").style.display = "none";
-        document.getElementById("help-btn").style.display = "none";
-        document.getElementById("settings-btn").style.display = "none";
-        document.getElementById("propose-work-btn").style.display = "none";
-
-        let formFrame = document.getElementById("form-frame");
-        formFrame.src = formUrl;
-        formFrame.classList.remove("hidden");
+async function openCanvasWithExtraction(currentUrl) {
+    console.log('🎨 openCanvasWithExtraction called');
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+    
+    try {
+        // 1. Extract page content
+        console.log('📄 Extracting page content...');
+        const pageData = await chrome.tabs.sendMessage(tab.id, {
+            action: 'extractContent'
+        });
+        
+        if (!pageData || !pageData.success) {
+            console.error('❌ Content extraction failed:', pageData);
+            throw new Error('Content extraction failed');
+        }
+        
+        console.log('✅ Page content extracted:', pageData.data.url);
+        
+        // 2. Get auth data
+        const authData = await chrome.storage.local.get([
+            'authToken', 
+            'selectedSystemUrl', 
+            'username'
+        ]);
+        
+        // 3. Optional: Get crawler data
+        let crawlerData = null;
+        try {
+            const crawlerResponse = await fetch(
+                `${defaultConfig.crawler.url}?url=${encodeURIComponent(currentUrl)}`,
+                {
+                    headers: { 'X-API-Key': defaultConfig.crawler.apiKey }
+                }
+            );
+            if (crawlerResponse.ok) {
+                crawlerData = await crawlerResponse.json();
+                console.log(' Crawler data loaded');
+            }
+        } catch (e) {
+            console.log(' Crawler not available, continuing without');
+        }
+        
+        // 4. Build data package
+        const dataPackage = {
+            // Page data from content-extractor
+            url: pageData.data.url,
+            title: pageData.data.title,
+            content: pageData.data.content,
+            meta: pageData.data.meta,
+            structuredData: pageData.data.structuredData,
+            
+            // Optional crawler data
+            crawlerData: crawlerData,
+            
+            // User info
+            userInfo: {
+                isLoggedIn: !!authData.authToken,
+                username: authData.username || 'Gast',
+                systemName: authData.selectedSystemUrl?.includes('staging') ? 'WLO Staging' : 'WLO'
+            }
+        };
+        
+        // 5. Build Canvas URL (with URL params as fallback)
+        const canvasUrl = new URL(defaultConfig.canvas.url);
+        canvasUrl.searchParams.set('mode', 'browser-extension');
+        canvasUrl.searchParams.set('theme', 'edu-sharing');
+        
+        const encodedData = btoa(encodeURIComponent(JSON.stringify(dataPackage)));
+        canvasUrl.searchParams.set('data', encodedData);
+        
+        // 6. Open Canvas in content script
+        console.log('🚀 Opening Canvas with URL:', canvasUrl.toString());
+        console.log('📦 Sending page data:', {
+            url: dataPackage.url,
+            title: dataPackage.title,
+            hasContent: !!dataPackage.content,
+            isLoggedIn: dataPackage.userInfo.isLoggedIn
+        });
+        
+        // Send BOTH: URL (with params as fallback) AND pageData (for postMessage)
+        const response = await chrome.tabs.sendMessage(tab.id, {
+            action: 'openCanvas',
+            canvasUrl: canvasUrl.toString(),  // URL with params (fallback)
+            pageData: {
+                url: dataPackage.url,
+                title: dataPackage.title,
+                html: dataPackage.content?.main || dataPackage.content?.cleaned || '',
+                text: formatPageDataAsText(dataPackage),
+                metadata: {
+                    meta: dataPackage.meta,
+                    structuredData: dataPackage.structuredData,
+                    crawlerData: dataPackage.crawlerData
+                },
+                mode: 'browser-extension'
+            }
+        });
+        
+        console.log('✅ Canvas opened successfully:', response);
         hideSpinner();
-    });
+        window.close();
+        
+    } catch (error) {
+        console.error('❌ openCanvasWithExtraction failed:', error);
+        console.error('Error stack:', error.stack);
+        hideSpinner();
+        alert('Fehler beim Öffnen der Canvas:\n' + error.message + '\n\nBitte öffne die Browser-Console (F12) für Details.');
+    }
 }
 
 async function loadSystemOptions() {
     try {
-        let response = await fetch(defaultConfig.systems);
-        let systems = await response.json();
+        // ONLY STAGING - Use local config instead of remote systems
         let systemSelect = document.getElementById("system-select");
-
         systemSelect.innerHTML = "";
-        systems.forEach(system => {
-            if (system.name === "WLO (staging)") {
+        
+        // Add only enabled repositories from config
+        Object.entries(defaultConfig.repository).forEach(([key, repo]) => {
+            if (repo.enabled) {
                 let option = document.createElement("option");
-                option.value = system.name;
-                option.textContent = "WLO (Staging)";
-                option.dataset.url = system.url;
+                option.value = key;
+                option.textContent = repo.name;
+                option.dataset.url = repo.baseUrl;
                 systemSelect.appendChild(option);
-            } else {
-                let option = document.createElement("option");
-                option.value = system.name;
-                option.textContent = system.name;
-                option.dataset.url = system.url;
-                //TODO: Uncomment if other systems than staging should be used
-                //systemSelect.appendChild(option);
             }
         });
+        
+        // Fallback if no repository is enabled (should not happen)
+        if (systemSelect.options.length === 0) {
+            let option = document.createElement("option");
+            option.value = "staging";
+            option.textContent = "WLO Staging";
+            option.dataset.url = "https://repository.staging.openeduhub.net/edu-sharing/";
+            systemSelect.appendChild(option);
+        }
+        
+        console.log('✅ Loaded repositories (staging only):', systemSelect.options.length);
     } catch (error) {
+        console.error('Failed to load system options:', error);
     }
 }
 

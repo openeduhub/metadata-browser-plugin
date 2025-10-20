@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+        }
+        .test-buttons {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #004494;
+        }
+        #logs {
+            background: #f5f5f5;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        #canvas-iframe {
+            border: 2px solid #0056b3;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Canvas Integration Test</h1>
+    
+    <div class="test-buttons">
+        <button onclick="testCanvasUrl()">1. Test Canvas URL direkt</button>
+        <button onclick="testCanvasInIframe()">2. Test Canvas in iframe</button>
+        <button onclick="testPostMessage()">3. Test postMessage</button>
+        <button onclick="clearLogs()">Logs löschen</button>
+    </div>
+    
+    <div id="logs"></div>
+    
+    <iframe id="canvas-iframe" style="display: none; width: 100%; height: 600px;"></iframe>
+    
+    <script>
+        const CANVAS_URL = 'https://metadata-agent-canvas.vercel.app/';
+        
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const emoji = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            logs.innerHTML += `<div>[${timestamp}] ${emoji} ${message}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+        
+        async function testCanvasUrl() {
+            log('Testing Canvas URL: ' + CANVAS_URL);
+            try {
+                const response = await fetch(CANVAS_URL);
+                if (response.ok) {
+                    log('Canvas URL ist erreichbar! Status: ' + response.status, 'success');
+                    log('Content-Type: ' + response.headers.get('content-type'));
+                } else {
+                    log('Canvas URL antwortet mit Fehler: ' + response.status, 'error');
+                }
+            } catch (error) {
+                log('Fehler beim Erreichen der Canvas URL: ' + error.message, 'error');
+            }
+        }
+        
+        function testCanvasInIframe() {
+            log('Loading Canvas in iframe...');
+            const iframe = document.getElementById('canvas-iframe');
+            iframe.style.display = 'block';
+            
+            const url = new URL(CANVAS_URL);
+            url.searchParams.set('mode', 'browser-extension');
+            url.searchParams.set('theme', 'edu-sharing');
+            
+            iframe.src = url.toString();
+            log('iframe src set to: ' + url.toString());
+            
+            iframe.onload = () => {
+                log('iframe loaded successfully!', 'success');
+                
+                // Try to access iframe content
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    log('iframe content accessible: ' + (!!iframeDoc), 'success');
+                } catch (e) {
+                    log('Cannot access iframe content (CORS): ' + e.message);
+                }
+            };
+            
+            iframe.onerror = (error) => {
+                log('iframe loading error: ' + error, 'error');
+            };
+        }
+        
+        function testPostMessage() {
+            log('Testing postMessage to Canvas...');
+            const iframe = document.getElementById('canvas-iframe');
+            
+            if (!iframe.src) {
+                log('Bitte zuerst Canvas in iframe laden (Button 2)', 'error');
+                return;
+            }
+            
+            const testData = {
+                type: 'PLUGIN_PAGE_DATA',
+                url: 'https://example.com/test',
+                title: 'Test Page',
+                html: '<h1>Test</h1>',
+                text: 'Test content',
+                metadata: {
+                    meta: { description: 'Test description' }
+                },
+                mode: 'browser-extension'
+            };
+            
+            try {
+                iframe.contentWindow.postMessage(testData, '*');
+                log('postMessage sent successfully!', 'success');
+                log('Data: ' + JSON.stringify(testData, null, 2));
+            } catch (error) {
+                log('postMessage failed: ' + error.message, 'error');
+            }
+            
+            // Listen for response
+            window.addEventListener('message', (event) => {
+                log('Received message from Canvas: ' + JSON.stringify(event.data), 'success');
+            }, { once: true });
+        }
+        
+        // Initial info
+        log('Canvas URL: ' + CANVAS_URL);
+        log('Bereit für Tests. Klicke auf die Buttons oben.');
+    </script>
+</body>
+</html>
