@@ -1,0 +1,74 @@
+<!--
+  This file is part of the WLO Browser Extension.
+
+  Copyright (C) 2025 Harald Holzmann, Various Interactive GmbH
+  Contact: harald@various.at
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pädagogischer Warenkorb</title>
+    <link rel="stylesheet" href="../styles/warenkorb.css">
+</head>
+<body>
+    <div id="warenkorb-sidebar">
+        <div class="wk-header">
+            <h1>🛒 Pädagogischer Warenkorb</h1>
+            <p>Unterrichtsplanung mit WLO-Inhalten</p>
+        </div>
+
+        <div class="wk-search-link">
+            <input type="text" id="wk-search-input" placeholder="Suchbegriff eingeben...">
+            <button id="wk-search-btn" title="In WLO suchen">🔍 Suchen</button>
+        </div>
+
+        <div class="wk-pattern-selector">
+            <label>Ablaufmuster</label>
+            <select id="wk-pattern-select">
+                <!-- Optionen werden dynamisch eingefügt -->
+            </select>
+        </div>
+
+        <div class="wk-phases" id="wk-phases-container">
+            <!-- Phasen werden dynamisch eingefügt -->
+        </div>
+
+        <div class="wk-differentiation">
+            <label>Binnendifferenzierung</label>
+            <div class="wk-diff-options" id="wk-diff-options">
+                <!-- Differenzierungs-Tags werden dynamisch eingefügt -->
+            </div>
+        </div>
+
+        <div class="wk-footer">
+            <button class="wk-btn wk-btn-secondary" id="wk-clear-btn">
+                🗑️ Leeren
+            </button>
+            <button class="wk-btn wk-btn-primary" id="wk-export-btn">
+                📄 Export
+            </button>
+        </div>
+    </div>
+
+    <script src="../scripts/patterns.js"></script>
+    <script src="../scripts/wlo-api.js"></script>
+    <script src="../scripts/pdf-export.js"></script>
+    <script src="../scripts/warenkorb.js"></script>
+</body>
+</html>

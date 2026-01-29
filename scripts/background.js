@@ -34,11 +34,41 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
+// Speichert Referenz zum aktuellen Tab mit offener Sidebar
+let sidebarTabId = null;
+let sidebarFrame = null;
+
 // open sidebar when activate the extension
 chrome.action.onClicked.addListener(function (tab) {
+    console.log('🔘 Plugin-Button geklickt');
     chrome.tabs.sendMessage(tab.id, {
-        action: "showInfoFrame",
-        file: "html/home.html",
+        action: "showSidebar",
         closeIfOpen: true
     });
+});
+
+// Empfängt Items vom Content Script und leitet an Sidebar weiter
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log('📨 Background Script empfängt Message:', request.action);
+    
+    if (request.action === "addItemToWarenkorb") {
+        console.log('📦 Item empfangen:', request.item);
+        
+        // Speichere Tab-ID für später
+        sidebarTabId = sender.tab.id;
+        
+        // Leite an alle Tabs weiter (der mit der Sidebar wird es empfangen)
+        chrome.tabs.query({}, (tabs) => {
+            tabs.forEach(tab => {
+                chrome.tabs.sendMessage(tab.id, {
+                    action: "forwardItemToWarenkorb",
+                    item: request.item
+                }).catch(() => {
+                    // Tab antwortet nicht, ignorieren
+                });
+            });
+        });
+        
+        sendResponse({ success: true });
+    }
 });

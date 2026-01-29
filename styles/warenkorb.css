@@ -1,0 +1,391 @@
+/**
+ * Pädagogischer Warenkorb - Sidebar Styles für iframe
+ * Basiert auf warenkorb/sidebar.css, angepasst für iframe-Kontext
+ */
+
+:root {
+  --wk-primary: #2563eb;
+  --wk-primary-dark: #1d4ed8;
+  --wk-secondary: #64748b;
+  --wk-success: #10b981;
+  --wk-warning: #f59e0b;
+  --wk-danger: #ef4444;
+  --wk-bg: #ffffff;
+  --wk-bg-secondary: #f8fafc;
+  --wk-border: #e2e8f0;
+  --wk-text: #1e293b;
+  --wk-text-muted: #64748b;
+  --wk-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --wk-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --wk-radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  color: var(--wk-text);
+  background: var(--wk-bg);
+}
+
+/* Sidebar Container */
+#warenkorb-sidebar {
+  width: 100%;
+  height: 100vh;
+  background: var(--wk-bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.wk-header {
+  padding: 16px;
+  background: linear-gradient(135deg, var(--wk-primary), var(--wk-primary-dark));
+  color: white;
+  flex-shrink: 0;
+}
+
+.wk-header h1 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wk-header p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* WLO Search Link */
+.wk-search-link {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--wk-bg-secondary);
+  border-bottom: 1px solid var(--wk-border);
+  flex-shrink: 0;
+}
+
+.wk-search-link input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--wk-border);
+  border-radius: var(--wk-radius);
+  font-size: 13px;
+}
+
+.wk-search-link input:focus {
+  outline: none;
+  border-color: var(--wk-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.wk-search-link button {
+  padding: 8px 16px;
+  background: var(--wk-primary);
+  color: white;
+  border: none;
+  border-radius: var(--wk-radius);
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.wk-search-link button:hover {
+  background: var(--wk-primary-dark);
+}
+
+/* Pattern Selector */
+.wk-pattern-selector {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--wk-border);
+  flex-shrink: 0;
+}
+
+.wk-pattern-selector label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wk-text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wk-pattern-selector select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--wk-border);
+  border-radius: var(--wk-radius);
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.wk-pattern-selector select:focus {
+  outline: none;
+  border-color: var(--wk-primary);
+}
+
+/* Phases Container */
+.wk-phases {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Phase Card */
+.wk-phase {
+  background: var(--wk-bg-secondary);
+  border: 2px dashed var(--wk-border);
+  border-radius: var(--wk-radius);
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.wk-phase.active {
+  background: #d1fae5;
+  border-color: var(--wk-success);
+  border-style: solid;
+}
+
+.wk-phase.active .wk-phase-header {
+  background: var(--wk-success);
+  color: white;
+}
+
+.wk-phase.active .wk-phase-name,
+.wk-phase.active .wk-phase-meta {
+  color: white;
+}
+
+.wk-phase.drag-over {
+  border-color: var(--wk-primary);
+  background: rgba(37, 99, 235, 0.05);
+  transform: scale(1.02);
+}
+
+.wk-phase-header {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.wk-phase-icon {
+  font-size: 20px;
+}
+
+.wk-phase-info {
+  flex: 1;
+}
+
+.wk-phase-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.wk-phase-meta {
+  font-size: 11px;
+  color: var(--wk-text-muted);
+}
+
+.wk-phase-duration {
+  font-size: 12px;
+  color: var(--wk-secondary);
+  background: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.wk-phase-toggle {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--wk-secondary);
+  transition: transform 0.2s;
+}
+
+.wk-phase.expanded .wk-phase-toggle {
+  transform: rotate(180deg);
+}
+
+/* Phase Content (Dropzone) */
+.wk-phase-content {
+  display: none;
+  padding: 0 12px 12px 12px;
+}
+
+.wk-phase.expanded .wk-phase-content {
+  display: block;
+}
+
+.wk-dropzone {
+  min-height: 80px;
+  background: white;
+  border: 1px dashed var(--wk-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--wk-text-muted);
+  font-size: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.wk-dropzone.has-items {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.wk-dropzone-hint {
+  text-align: center;
+}
+
+.wk-dropzone-hint span {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+/* Content Item in Phase */
+.wk-content-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--wk-bg-secondary);
+  border: 1px solid var(--wk-border);
+  border-radius: 6px;
+  cursor: grab;
+}
+
+.wk-content-item:active {
+  cursor: grabbing;
+}
+
+.wk-content-item img {
+  width: 48px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--wk-border);
+}
+
+.wk-content-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wk-content-item-title {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wk-content-item-type {
+  font-size: 11px;
+  color: var(--wk-text-muted);
+}
+
+.wk-content-item-remove {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--wk-danger);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.wk-content-item-remove:hover {
+  opacity: 1;
+}
+
+/* Footer Actions */
+.wk-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--wk-border);
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.wk-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--wk-radius);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.wk-btn-primary {
+  background: var(--wk-primary);
+  color: white;
+}
+
+.wk-btn-primary:hover {
+  background: var(--wk-primary-dark);
+}
+
+.wk-btn-secondary {
+  background: var(--wk-bg-secondary);
+  color: var(--wk-text);
+  border: 1px solid var(--wk-border);
+}
+
+.wk-btn-secondary:hover {
+  background: var(--wk-border);
+}
+
+/* Scrollbar Styling */
+.wk-phases::-webkit-scrollbar {
+  width: 8px;
+}
+
+.wk-phases::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.wk-phases::-webkit-scrollbar-thumb {
+  background: var(--wk-border);
+  border-radius: 4px;
+}
+
+.wk-phases::-webkit-scrollbar-thumb:hover {
+  background: var(--wk-secondary);
+}
