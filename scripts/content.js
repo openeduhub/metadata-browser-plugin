@@ -28,7 +28,7 @@ function openSidebar(file) {
     iframe.id = "wlo-info-frame";
     iframe.src = chrome.runtime.getURL(file);
     document.body.appendChild(iframe);
-    document.body.style.marginRight = "400px"; // oder 0px beim Entfernen
+    document.body.style.marginRight = "500px"; // oder 0px beim Entfernen
     isSidebarOpen = true;
     return iframe;
 }
@@ -55,14 +55,14 @@ function openWarenkorb() {
         position: fixed;
         top: 0;
         right: 0;
-        width: 400px;
+        width: 500px;
         height: 100vh;
         border: none;
         z-index: 999999;
         box-shadow: -2px 0 10px rgba(0,0,0,0.1);
     `;
     document.body.appendChild(iframe);
-    document.body.style.marginRight = "400px";
+    document.body.style.marginRight = "500px";
     isWarenkorbOpen = true;
     console.log('📂 Unified Sidebar geöffnet');
     return iframe;
