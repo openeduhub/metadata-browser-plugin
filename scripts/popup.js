@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const result = await checkUrl(url);
         
         if (result.alreadyExists) {
+            hideSpinner();
+            document.getElementById("auth-container").classList.remove("hidden");
             window.close();
 
             const node = result.node;
@@ -86,8 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const url = tab.url;
 
         const result = await checkUrl(url);
-        
         if (result.alreadyExists) {
+            hideSpinner();
+            document.getElementById("main-content").classList.remove("hidden");
             window.close();
 
             const node = result.node;

@@ -44,9 +44,18 @@
       "resources": [
         "html/info.html",
         "html/home.html",
+        "html/warenkorb.html",
+        "html/sidebar.html",
         "scripts/web-component/*",
+        "scripts/patterns.js",
+        "scripts/wlo-api.js",
+        "scripts/pdf-export.js",
+        "scripts/warenkorb.js",
+        "scripts/sidebar.js",
         "styles/web-component/styles.css",
-        "styles/iframe.css"
+        "styles/iframe.css",
+        "styles/warenkorb.css",
+        "styles/sidebar.css"
       ],
       "matches": ["<all_urls>"]
     }
